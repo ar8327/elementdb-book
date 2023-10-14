@@ -1,0 +1,16 @@
+book_filename: "elementdb-book"
+delete_merged_file: true
+language:
+  label:
+    fig: "图 "
+    tab: "表 "
+  ui:
+    edit: "编辑"
+    chapter_name: ["第 ", " 章"]
+    part_name: ["第 ", " 部分"]
+rmd_files:
+  - "index.Rmd"
+  - "01-intro.Rmd"
+  - "02-problems-building-simple-db.Rmd"
+  - "11-brief-history-of-dbms.Rmd"
+  - "12-modules-of-dbms.Rmd"
