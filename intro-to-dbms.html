@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>第 3 章 DBMS简介 | ElementDB the Book</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="第 3 章 DBMS简介 | ElementDB the Book" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="github-repo" content="ar8327/elementdb-book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="第 3 章 DBMS简介 | ElementDB the Book" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="ar8327" />
+
+
+<meta name="date" content="2023-10-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">ElementDB the Book</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> 序言</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> 问题引入</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#building-a-employee-management-system"><i class="fa fa-check"></i><b>2.1</b> 构建一个员工信息管理系统</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#存储的逻辑结构"><i class="fa fa-check"></i>存储的逻辑结构</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#系统支持的功能"><i class="fa fa-check"></i>系统支持的功能</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#系统的简易实现"><i class="fa fa-check"></i>系统的简易实现</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#problems-building-simple-db"><i class="fa fa-check"></i><b>2.2</b> 员工信息管理系统的问题</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#与物理存储结构绑定的查询和写入逻辑"><i class="fa fa-check"></i>与物理存储结构绑定的查询和写入逻辑</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏并发控制读写操作互相排斥"><i class="fa fa-check"></i>缺乏并发控制，读写操作互相排斥</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#数据持久化与数据完整性检查"><i class="fa fa-check"></i>数据持久化与数据完整性检查</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏唯一索引约束能力"><i class="fa fa-check"></i>缺乏唯一索引约束能力</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#性能问题"><i class="fa fa-check"></i>性能问题</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏字段类型数据格式和存储低效"><i class="fa fa-check"></i>缺乏字段类型、数据格式和存储低效</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏表结构灵活性"><i class="fa fa-check"></i>缺乏表结构灵活性</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html"><i class="fa fa-check"></i><b>3</b> DBMS简介</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#brief-history-of-dmbs"><i class="fa fa-check"></i><b>3.1</b> 数据库系统发展简史</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#datamodel"><i class="fa fa-check"></i><b>3.1.1</b> 数据模型</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#modules-of-dbms"><i class="fa fa-check"></i><b>3.2</b> 数据库系统的模块</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#frontend-of-dbms"><i class="fa fa-check"></i><b>3.2.1</b> 数据库的前端</a></li>
+<li class="chapter" data-level="3.2.2" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#backend-of-dbms"><i class="fa fa-check"></i><b>3.2.2</b> 数据库的后端</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Compiled with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ElementDB the Book</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="intro-to-dbms" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">第 3 章</span> DBMS简介<a href="intro-to-dbms.html#intro-to-dbms" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="brief-history-of-dmbs" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> 数据库系统发展简史<a href="intro-to-dbms.html#brief-history-of-dmbs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>在 1960 年代，计算机刚被发明不久，当时计算机远没有普及，软件生态相较今天也十分简单。但在当时，就已经有大型公司尝试着使用计算机来管理数据了。</p>
+<p>使用计算机来管理数据有很多好处，相较于传统的纸质数据管理方式，计算机一次性能够记录更多的数据，在数据的检索和管理上也更为容易，存在数据更不容易丢失等优势。</p>
+<p>1960 年代主要的数据库系统是以 IDS 为代表的层级数据库。这么说可能会让读者没有概念，因此，为了描述数据库系统，我首先展开一下数据库系统的几个基本概念。</p>
+<div id="datamodel" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> 数据模型<a href="intro-to-dbms.html#datamodel" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>所有的数据存储都依赖一个事先定义好的数据模型。以大家熟悉的 MySQL 举例，MySQL 是一种关系型数据库管理系统 (Relational DBMS) 。 MySQL 的数据模型是基于关系代数建立的，在 MySQL 中，所有的数据都从属于一个“表”，这个“表”可以与其他“表”进行关系代数运算。这就是一种非常典型的数据模型。</p>
+<div id="hierarchical-database" class="section level4 hasAnchor" number="3.1.1.1">
+<h4><span class="header-section-number">3.1.1.1</span> 层级数据库<a href="intro-to-dbms.html#hierarchical-database" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>最早期的数据库大部分都是层级数据库 (Hierarchical Database)，在层级数据库中，所有的数据都是按照层级组织的。通常来说，这种类型的数据库中都有一个根结点，当用户需要寻找什么数据的时候，需要手动操作数据库，从根结点出发，定位到自己想要的数据。</p>
+<p>举例来说，如果要存储书和作者的关系，可能看起来是下面这样：</p>
+<pre><code>RECORD Author
+    AuthorID: INTEGER
+    Name: STRING
+    Birthdate: DATE
+    Books: SET OF Book
+
+RECORD Book
+    BookID: INTEGER
+    Title: STRING
+    PublicationDate: DATE
+    Author: REFERENCE TO Author
+
+// 定义作者
+AUTHOR_1 = Author(AuthorID=1, Name=&quot;J.K. Rowling&quot;, Birthdate=&quot;31/07/1965&quot;)
+AUTHOR_2 = Author(AuthorID=2, Name=&quot;George Orwell&quot;, Birthdate=&quot;25/06/1903&quot;)
+
+// 定义书
+BOOK_1 = Book(BookID=1, Title=&quot;Harry Potter and the Sorcerer&#39;s Stone&quot;, PublicationDate=&quot;26/06/1997&quot;, Author=AUTHOR_1)
+BOOK_2 = Book(BookID=2, Title=&quot;1984&quot;, PublicationDate=&quot;08/06/1949&quot;, Author=AUTHOR_2)
+
+// 通过这种方式将作者和书链接起来
+AUTHOR_1.Books = [BOOK_1]
+AUTHOR_2.Books = [BOOK_2]
+
+// 查询的例子
+
+// 找到所有AUTHOR_1写的书
+for book in AUTHOR_1.Books:
+    print(book.Title)
+
+// 获取BOOK_2的作者名
+print(BOOK_2.Author.Name)</code></pre>
+<p>可以看到，在这种数据模型下，用户需要手动跟踪数据中存储的指针，直到找到自己的数据位置</p>
+<p>1960 年代时，主要的数据库就是这种形式。这种形式的数据库中查询数据很复杂，和关系型数据库相比，不仅不能一次性使用外键连接多个表，而且查询数据的方式主要依赖代码实现，很难让用户单独使用命令查询。</p>
+<p>在 1970 年代，随着关系代数的论文被发表，关系型数据库的概念开始兴起。我们今天所熟悉的 SQL 也被发明了。 IBM 的 System R 是第一个实现了关系代数模型的数据库产品。不过，由于当时的计算机尚未普及，对数据库系统系统的需求基本还停留在大型公司，其他大部分公司没有对数据库产品的需求。但 1970 年代的意义是重大的，因为关系型数据库这一时至今日仍然流行的数据模型就是在那时被确立的。</p>
+<p>当然，尽管有了关系型数据库的雏形，当时的数据库系统还有很多基础研究没有完成。举例来说，对于数据库系统应该如何处理并发请求，如何管理锁来避免用户数据出现问题，直到 1990 年代才有系统性的论文出现。</p>
+<p>随着计算机和互联网的普及，数据库系统不再是单纯的为大公司服务的昂贵系统，举例来说，1995 年微软发布了 Microsoft SQL Server ，这是一款能够运行在普通个人计算机上的数据库管理系统，而随着互联网的发展，越来越多的网站被建立起来，对数据库系统的需求激增，因此，以 MySQL 、MsSQL 、Postgres 等为代表的可以运行在普通个人计算机上的数据库系统从 1990 年代开始流行。</p>
+</div>
+<div id="relational-database" class="section level4 hasAnchor" number="3.1.1.2">
+<h4><span class="header-section-number">3.1.1.2</span> 关系型数据库<a href="intro-to-dbms.html#relational-database" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>在 1990 年代流行的数据库就是关系型数据库了，这个时候的数据库已经和今天大家熟悉的数据库很相似，我就不多做介绍。需要指出的是，今天大家很熟悉的 MySQL 在当时功能十分简单，是一个类似 KV数据库 的数据库。在 Innobase 将 innodb 捐献给 MySQL 之后， MySQL 才拥有了今天这些大家熟悉的功能。在 InnoDB 之前， MySQL 的默认存储引擎 MyISAM 不支持外键这种基本的关系型数据库功能，也不支持行锁这种基础的并发控制，是一个功能相对较弱的数据库。</p>
+</div>
+<div id="newsql" class="section level4 hasAnchor" number="3.1.1.3">
+<h4><span class="header-section-number">3.1.1.3</span> NoSQL与NewSQL<a href="intro-to-dbms.html#newsql" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>在关系型数据库流行之后，随着互联网的进一步发展，对数据库系统也提出了新的要求，例如，非结构化数据存储，或者是大量数据的分区存储、分析能力，这些不是传统的关系型数据库能够支持的。因此，随后的数据库发展朝着两个方向进行：</p>
+<p>第一个方向是发明各种新型的数据模型，例如文档数据库、图数据库，这些基于特定数据模型的数据库在特定的应用场景下相较关系型数据库有更大的优势。</p>
+<p>第二个方向是进行数据库架构的演变，以支持不同的场景和灵活的性能要求，例如 Google 的 Spanner 就是典型的一种分布式、超大型数据库。</p>
+
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div id="modules-of-dbms" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> 数据库系统的模块<a href="intro-to-dbms.html#modules-of-dbms" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>不论数据库系统有哪些功能、实现哪种数据模型，在一些地方始终是相通的。本文介绍数据库系统通常的架构是什么样的。</p>
+<p>我们来考虑一个基本的数据库系统，它至少包含以下两个部分：</p>
+<ul>
+<li><p>用来处理用户请求的部分</p></li>
+<li><p>用来管理数据存储的部分</p></li>
+</ul>
+<p>通常，第一个部分被称为数据库系统的前端，而第二个部分被称为数据库系统的后端。</p>
+<p>接下来， 我们分别考察这两个部分。</p>
+<div id="frontend-of-dbms" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> 数据库的前端<a href="intro-to-dbms.html#frontend-of-dbms" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="query-parser" class="section level4 hasAnchor" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> 查询解析器<a href="intro-to-dbms.html#query-parser" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>这部分需要解析用户输入的命令，判断用户命令的合法性，举例来说：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="intro-to-dbms.html#cb3-1" aria-hidden="true" tabindex="-1"></a>FELECT <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">LIMIT</span> <span class="dv">0</span>,<span class="dv">10</span></span></code></pre></div>
+<p>这句 SQL 命令就不是一句合法的 SQL 命令，因为实际上不存在 <code>FELECT</code> 这一关键词</p>
+<p>事实上，市面上的大部分数据库前端都会将用户输入的命令解析成抽象语法树 (AST) ，供后端处理，举例来说，下面是一颗解析 SQL 的 AST ：</p>
+<pre><code>&lt;select-statement&gt;
+    ├── &lt;column-list&gt;
+    │       └── &lt;column-name&gt;
+    │              └── name
+    ├── &lt;table-name&gt;
+    │       └── students
+    └── &lt;condition&gt;
+            ├── &lt;expression&gt;
+            │       ├── &lt;MARK&gt;
+            │       │      └── age
+            │       ├── &lt;OP&gt;
+            │       │      └── &gt;
+            │       └── &lt;CONST&gt;
+            │              └── &#39;18&#39;
+            ├── &lt;logical-op&gt;
+            │        └── AND
+            └── &lt;expression&gt;
+                    ├── &lt;MARK&gt;
+                    │      └── gender
+                    ├── &lt;OP&gt;
+                    │      └── =
+                    └── &lt;CONST&gt;
+                           └── &#39;M&#39;</code></pre>
+</div>
+<div id="query-optimizer" class="section level4 hasAnchor" number="3.2.1.2">
+<h4><span class="header-section-number">3.2.1.2</span> 查询优化器<a href="intro-to-dbms.html#query-optimizer" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>这部分做的事情主要是对用户输入的查询命令进行一个优化，需要注意的是，在数据库的后端实际上也存在执行计划的优化操作，这部分仅仅讨论的是对 AST 的优化操作。</p>
+<p>例如，考虑这么一句 SQL ：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="intro-to-dbms.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">&gt;=</span> <span class="dv">10</span> <span class="kw">AND</span> col1 <span class="op">&lt;=</span> <span class="dv">10</span></span></code></pre></div>
+<p>这句 SQL 实际上可以被等价优化成：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="intro-to-dbms.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">=</span> <span class="dv">10</span></span></code></pre></div>
+<p>这种基于 AST 的纯粹优化有很多好处，举例来说，如果不进行这样的优化，那么数据库后端在执行这个查询的时候大概率在执行的时候是这么执行的：</p>
+<p>先找出所有满足 <code>col1 &gt;= 10</code> 或者 <code>col1 &lt;= 10</code> 的记录，然后检查是否满足其他条件。</p>
+<p>这种查询显然是十分低效的，远不如根据 AST 优化后的结果。</p>
+</div>
+</div>
+<div id="backend-of-dbms" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> 数据库的后端<a href="intro-to-dbms.html#backend-of-dbms" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="system-dictionary" class="section level4 hasAnchor" number="3.2.2.1">
+<h4><span class="header-section-number">3.2.2.1</span> 系统字典<a href="intro-to-dbms.html#system-dictionary" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>数据库系统要对外维持自己的数据模型，就需要维护一些特定的信息。举例来说，如果是一个关系型的数据库，就需要维护自己目前库中有哪些表，表中有什么字段，哪些字段上存在索引这些信息。这一类的信息我们统称为数据库的多数据字典信息，属于是数据库系统自行维护的数据库元信息。数据库很大程度上需要依靠这些元信息来判断查询是否合法，以及如何执行查询。举例来说：当用户需要根据某一条件进行某一查询时，数据库需要根据元信息判断条件字段上是否存在索引，以此来决策具体的执行计划：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="intro-to-dbms.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">=</span> <span class="dv">10</span></span></code></pre></div>
+<p>对于这句查询语句，数据库系统就需要根据元信息来查询这么几个点：</p>
+<ul>
+<li><p><code>table1</code> 是否存在</p></li>
+<li><p><code>table1</code>中有哪些字段</p></li>
+<li><p><code>table1</code>的数据存储在哪里</p></li>
+<li><p><code>col1</code>上是否有索引</p></li>
+</ul>
+</div>
+<div id="query-planner" class="section level4 hasAnchor" number="3.2.2.2">
+<h4><span class="header-section-number">3.2.2.2</span> 查询计划器<a href="intro-to-dbms.html#query-planner" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>查询计划器是所有数据库系统中最为复杂的部分，用于将逻辑上用户需要进行的查询计划转化为物理的执行计划，要明确到需要根据什么查数据，查什么数据，查到了数据之后进行怎么样的处理，具体的算子下沉还是上升等等问题，生成和优化物理执行计划本身是一个NP问题，这也是各个高性能数据库的技术核心。</p>
+<p>在用户输入的命令被解析成 AST 并且通过数据字典的基本校验后，就进入到了查询计划器当中。</p>
+<p>举例来说，考虑这么一条 SQL ：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="intro-to-dbms.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">&gt;=</span> <span class="dv">10</span> <span class="kw">AND</span> col2 <span class="op">&lt;=</span> <span class="dv">10</span></span></code></pre></div>
+<p>这里其实有三条明显的执行路径：</p>
+<ul>
+<li><p>直接扫描全部数据，然后根据条件筛选</p></li>
+<li><p>根据索引拉出所有 <code>col1 &gt;= 10</code> 的数据，然后筛选满足 <code>col2 &lt;= 10</code> 的</p></li>
+<li><p>根据索引拉出所有 <code>col2&lt;=10</code> 的数据，然后筛选满足 <code>col1&gt;=10</code> 的</p></li>
+</ul>
+<p>哪个执行方案才是更优的呢？这就需要一些额外的信息辅助判断了：</p>
+<p>例如，如果我们知道 <code>col1&gt;=10</code> 的数据只有大概 10 条，而 <code>col2&lt;=10</code> 的数据有 100000 条，那么显然第二个执行计划是更好的</p>
+<p>反之，如果我们知道 <code>col2&lt;=10</code> 的数据明显少于 <code>col1&gt;=10</code> 的，那么显然第三个执行计划成本就更低</p>
+<p>当然，如果说 <code>col1</code> 、<code>col2</code> 上不存在索引，或者说表的数据量很小，由于 <code>id</code> 在我们的数据库里是聚簇索引，不需要回盘查第二次，那可能直接拉所有的数据是更好的</p>
+</div>
+<div id="dbms" class="section level4 hasAnchor" number="3.2.2.3">
+<h4><span class="header-section-number">3.2.2.3</span> 事务管理器、锁管理器、并发控制器<a href="intro-to-dbms.html#dbms" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>这一部分，主要是大部分数据库都保有的、为了维持系统正确性、提供并发安全等而提供的机制，如果你的数据库要支持一些并发和隔离特性，那么需要一些额外的组件来支持数据库的正常工作。</p>
+<p>这部分是一个比较复杂的问题，举例来说，对于以下2个同时执行的事务：</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="intro-to-dbms.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">=</span> <span class="dv">10</span> <span class="cf">FOR</span> <span class="kw">UPDATE</span></span>
+<span id="cb9-2"><a href="intro-to-dbms.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col2 <span class="op">=</span> <span class="dv">10</span> <span class="cf">FOR</span> <span class="kw">UPDATE</span></span>
+<span id="cb9-3"><a href="intro-to-dbms.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">=</span> <span class="dv">10</span> <span class="cf">FOR</span> <span class="kw">UPDATE</span></span>
+<span id="cb9-4"><a href="intro-to-dbms.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col2 <span class="op">=</span> <span class="dv">10</span> <span class="cf">FOR</span> <span class="kw">UPDATE</span></span></code></pre></div>
+<p>这 2 个事务就会出现互相等待对方释放锁的情况，进而造成死锁，这是不可接受的情况，需要有一个事务主动回滚，才能解决这一问题。</p>
+<p>同样地，一些复杂的并发场景需要数据库系统主动识别才能避免问题发生，例如：</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="intro-to-dbms.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">id</span> <span class="kw">FROM</span> table1 <span class="kw">WHERE</span> col1 <span class="op">=</span> <span class="dv">10</span>; <span class="co">-- 事务1，结果id=10</span></span>
+<span id="cb10-2"><a href="intro-to-dbms.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> table1 <span class="kw">SET</span> col1 <span class="op">=</span> col1 <span class="op">+</span> <span class="dv">10</span> <span class="kw">WHERE</span> col1 <span class="op">=</span> <span class="dv">10</span>; <span class="co">-- 事务2，提交</span></span>
+<span id="cb10-3"><a href="intro-to-dbms.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> table1 <span class="kw">SET</span> col1 <span class="op">=</span> (<span class="dv">10</span>) <span class="op">+</span> <span class="dv">10</span> <span class="kw">WHERE</span> <span class="kw">id</span> <span class="op">=</span> <span class="dv">10</span>; <span class="co">-- 事务1，提交</span></span></code></pre></div>
+<p>上述的问题就是一个明显的并发问题，事务1读取并使用过期的值来对数据进行更新。</p>
+<p>由于这部分的内容相对比较复杂，要系统性的描述需要比较大的篇幅，在之后的内容中会进一步进行讨论。目前仅仅讨论到存在的问题和需要引入解决这些问题的组件。</p>
+</div>
+<div id="bufferpool" class="section level4 hasAnchor" number="3.2.2.4">
+<h4><span class="header-section-number">3.2.2.4</span> 缓存池<a href="intro-to-dbms.html#bufferpool" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>当执行计划被确定之后，就会对硬盘进行大量的 <strong>io操作</strong> ，理论上，这些 <strong>io操作</strong> 很可能是随机的，至少也是随机混合的，这一类的读写模式对硬盘不友好，而实际上，即使这种模式对硬盘是友好的，硬盘的数据读取时间对于 CPU 来说也是十分漫长的。</p>
+<div class="figure"><span style="display:block;" id="fig:latency-numbers"></span>
+<img src="images/intro-to-dbms/latency-numbers.png" alt="各种介质的延迟" width="75%" />
+<p class="caption">
+图 3.1: 各种介质的延迟
+</p>
+</div>
+<blockquote>
+<p>图源 <a href="https://blog.bytebytego.com/p/ep22-latency-numbers-you-should-know" class="uri">https://blog.bytebytego.com/p/ep22-latency-numbers-you-should-know</a></p>
+</blockquote>
+<p>因此，所有的io操作最好是在内存中进行，由缓存池负责对硬盘的实际io读写调度</p>
+</div>
+<div id="index" class="section level4 hasAnchor" number="3.2.2.5">
+<h4><span class="header-section-number">3.2.2.5</span> 索引<a href="intro-to-dbms.html#index" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>数据库系统大量需要索引来辅助查找和存储数据，如果没有索引的帮助，数据库系统每次查找数据时只能对所有数据进行遍历，这是不可接受的。而目前常见的两种用于在硬盘数据上建立索引算法是 B树 (包括 B+树 等各种衍生)和 SSTable 。这些算法不仅是要尽可能高校地满足各类查询和插入需求，更重要的是要能够契合硬盘的硬件特性，尽可能减少读取硬盘的次数，一次尽可能多的读取数据而不是多次读取少量数据。</p>
+</div>
+<div id="file-manager" class="section level4 hasAnchor" number="3.2.2.6">
+<h4><span class="header-section-number">3.2.2.6</span> 物理文件管理器<a href="intro-to-dbms.html#file-manager" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>最后我们要提到的是物理文件管理模块，这里的模块负责的是硬盘空间的管理，这也是一个相对来说有一些复杂的问题。</p>
+<p>举例来说，考虑我们需要向数据库存储一份数据，这份数据长 1000 个字节，那么存储引擎就需要考虑几个问题：</p>
+<ul>
+<li><p>在哪里存这份数据？空间如何分配？</p></li>
+<li><p>如果有数据最近被删除了，怎么回收之前的数据供使用？</p></li>
+<li><p>怎么样存储数据才能尽可能提高查询效率？</p></li>
+</ul>
+<p>这些问题一定程度上也决定了数据库的性能表现</p>
+<p>以上是对数据库系统各个常见模块的一些介绍，这些内容对理解接下来的行文思路会有很大帮助。</p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/11-brief-history-of-dbms.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["elementdb-book.pdf", "elementdb-book.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"pandoc_args": "--variable=lang:zh-CN"
+});
+});
+</script>
+
+</body>
+
+</html>

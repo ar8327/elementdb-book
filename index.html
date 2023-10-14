@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ElementDB the Book</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ElementDB the Book" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="github-repo" content="ar8327/elementdb-book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ElementDB the Book" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="ar8327" />
+
+
+<meta name="date" content="2023-10-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="intro.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">ElementDB the Book</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> 序言</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> 问题引入</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#building-a-employee-management-system"><i class="fa fa-check"></i><b>2.1</b> 构建一个员工信息管理系统</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#存储的逻辑结构"><i class="fa fa-check"></i>存储的逻辑结构</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#系统支持的功能"><i class="fa fa-check"></i>系统支持的功能</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#系统的简易实现"><i class="fa fa-check"></i>系统的简易实现</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#problems-building-simple-db"><i class="fa fa-check"></i><b>2.2</b> 员工信息管理系统的问题</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#与物理存储结构绑定的查询和写入逻辑"><i class="fa fa-check"></i>与物理存储结构绑定的查询和写入逻辑</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏并发控制读写操作互相排斥"><i class="fa fa-check"></i>缺乏并发控制，读写操作互相排斥</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#数据持久化与数据完整性检查"><i class="fa fa-check"></i>数据持久化与数据完整性检查</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏唯一索引约束能力"><i class="fa fa-check"></i>缺乏唯一索引约束能力</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#性能问题"><i class="fa fa-check"></i>性能问题</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏字段类型数据格式和存储低效"><i class="fa fa-check"></i>缺乏字段类型、数据格式和存储低效</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#缺乏表结构灵活性"><i class="fa fa-check"></i>缺乏表结构灵活性</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html"><i class="fa fa-check"></i><b>3</b> DBMS简介</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#brief-history-of-dmbs"><i class="fa fa-check"></i><b>3.1</b> 数据库系统发展简史</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#datamodel"><i class="fa fa-check"></i><b>3.1.1</b> 数据模型</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#modules-of-dbms"><i class="fa fa-check"></i><b>3.2</b> 数据库系统的模块</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#frontend-of-dbms"><i class="fa fa-check"></i><b>3.2.1</b> 数据库的前端</a></li>
+<li class="chapter" data-level="3.2.2" data-path="intro-to-dbms.html"><a href="intro-to-dbms.html#backend-of-dbms"><i class="fa fa-check"></i><b>3.2.2</b> 数据库的后端</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Compiled with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ElementDB the Book</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">ElementDB the Book</h1>
+<h2 class="subtitle"><em>e1f20d7</em></h2>
+<p class="author"><em>ar8327</em></p>
+<p class="date"><em>2023-10-14</em></p>
+</div>
+<div id="preface" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">第 1 章</span> 序言<a href="index.html#preface" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>构建一个数据库是一项庞大、复杂的工作，我也并不是专业有过数据库构建经验的人，所以，我想在文章的开篇就说明白，接下来这些文章的目的、受众以及我将如何展开。</p>
+<p>首先，这并不是一份专业性的数据库材料。我会尽可能将我的想法描述清楚，但我描述的内容中可能有不专业、不准确的地方，欢迎指正。这份资料本身的受众是对这些话题有兴趣但没有专业背景的业余爱好者。</p>
+<p>再次，这份资料的目的是记录我个人学习数据库相关知识时学习到的知识，以及我自己在实现数据库时自己的思考。我通过将这些知识整理成系统性资料的方式来提高我自身对知识的理解，也能帮助需要的朋友更好地学习。</p>
+<p>最后，来介绍一下这份资料的组织形式。</p>
+<p>首先聊一聊接下来这些资料的逻辑： 我会先讨论一些关于数据库系统的通用知识，例如什么是事务、什么是 SQL 、什么样的系统是一个数据库系统。在这一过程中，我会尽可能展示这些问题的复杂性，通过展示问题的复杂性，可以让读者对之后解决问题的过程产生兴趣，同时，也有利于激发新的思考。</p>
+<p>随后，我会介绍一个数据库系统大致应该有哪些组成部分，各个部分的作用，以及建立一个数据库的模型。在之后，我会详细展开每个部分的理论基础和系统设计，辅以部分实践和杂谈。</p>
+<p>我接下来写的资料会大概属于四个分类：</p>
+<ol style="list-style-type: decimal">
+<li><p>理论，这部分文章会相对严肃一些，阐述一些关于数据库系统的基础理论。例如，要阐述 B+ 树的设计、并发控制机制等，这部分内容会相对干一点，但这是后续所有工作的理论基础，保证我们系统的正确性。</p></li>
+<li><p>系统设计，这部分在理论的基础上，会讨论在工程上实际实现系统的取舍。同一种理论上的系统模型，有多种实现方式，而不同的实现方式，会产生系统实际性能表现等方面的不同，这就涉及到取舍，是需要重点讨论的。</p></li>
+<li><p>实践，这部分并不全部是要介绍我写的代码，甚至介绍代码的工作可能只占一小部分，也想设计一些小实验来测试、证实我在文章中所说的观点。我推荐读者也做一下这些实践，可能是自己写一份测试性能的代码，也可能是自己写一个 mmap 的 demo ，通过做这些事情能提高读者的编程能力，这是最基础的能力。</p></li>
+<li><p>杂谈，杂谈这一块我会发散地讨论一些和数据库系统本身无关，但可能有借鉴价值，或者属于基本素质的内容。</p></li>
+</ol>
+<p align="right">
+ar8327
+<br> 2023 年 10 月 <br/>
+</p>
+
+<div style="page-break-after: always;"></div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/index.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["elementdb-book.pdf", "elementdb-book.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"pandoc_args": "--variable=lang:zh-CN"
+});
+});
+</script>
+
+</body>
+
+</html>
