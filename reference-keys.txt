@@ -1,6 +1,7 @@
 fig:employee-logical-view
 fig:employee-physical-view
 fig:latency-numbers
+fig:query-language
 preface
 intro
 building-a-employee-management-system
@@ -22,3 +23,10 @@ dbms
 bufferpool
 index
 file-manager
+query-language
+query-language-and-data-models
+hierarchical-model
+relational-model
+sql
+document-model
+comparsion-between-hierarchical-model-and-document-model
