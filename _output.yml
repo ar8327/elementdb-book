@@ -11,13 +11,3 @@ bookdown::gitbook:
     download: []
     pandoc_args: "--variable=lang:zh-CN"
   css: css/style.css
-bookdown::pdf_book:
-  includes:
-    in_header: latex/preamble.tex
-    before_body: latex/before_body.tex
-    after_body: latex/after_body.tex
-  latex_engine: xelatex
-  citation_package: natbib
-  keep_tex: yes
-bookdown::epub_book: default
-bookdown::bs4_book: default
