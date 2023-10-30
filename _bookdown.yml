@@ -14,3 +14,4 @@ rmd_files:
   - "02-problems-building-simple-db.Rmd"
   - "11-brief-history-of-dbms.Rmd"
   - "12-modules-of-dbms.Rmd"
+  - "21-data-model-and-query-language.Rmd"
