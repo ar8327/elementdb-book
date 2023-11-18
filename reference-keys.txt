@@ -30,3 +30,12 @@ relational-model
 sql
 document-model
 comparsion-between-hierarchical-model-and-document-model
+designing-a-pseudo-sql
+intro-to-compiler-design
+lexical-analysis
+defination-of-token
+result-of-lexcal-analysis
+syntactic-analysis
+example-of-bnf
+parsing-with-bnf
+semantic-analysis
