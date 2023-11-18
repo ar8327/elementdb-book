@@ -1,0 +1,158 @@
+\newpage{}
+
+## 定义自己的简单类SQL语言 {#designing-a-pseudo-sql}
+
+SQL，即 Structured Query Language ，具有比较强的表达能力，最早在1979年由 Oracle 推向商用数据库市场。
+随着关系型数据库的流行， SQL 的影响力日渐庞大，几乎所有的关系型数据库，甚至部分 KV数据库 、 列数据库 也支持 SQL 或 SQL方言 作为数据查询语言和操作语言。
+
+接下来，为了实现我们自己的数据库，我们也需要为我们的数据库选择一种用于操作数据和查询数据的语言。这里，我选择了一种简化的 SQL 语言。这篇文章主要介绍如何定义这种语言。
+
+### 一点点的编译原理小知识 {#intro-to-compiler-design}
+首先，不妨思考这个问题：**如何定义一句 SQL 语句是否合理？如何设计我们自己的 SQL 语法？**
+
+一个答案是使用 BNF范式（巴科斯范式）。
+
+在解析一句 SQL 语句是否合法时，主要包括以下三个步骤。
+
+第一步，**词法分析**，这一步中，我们会把用户输入的 SQL 语句分为一个个的 token ，每个 token 都是 BNF 中定义的关键词。
+
+第二步，**语法分析**，在这一步，我们分析 token 的排列规则是否符合预先设定的规则，也就是是否符合我们定义的 BNF 范式的要求。经过语法分析后，我们能得到一些结构化的数据，这些结构对应的就是 SQL 语句的解析结果。比较典型的结构体是 Parse Tree 或者 AST (抽象语法树)。
+
+第三步，**语义分析**，这一步中我们要分析已经确定符合 BNF 范式的语句是否存在语义上的缺陷，例如，是否在字符串类型的字段中插入了数字，等等。
+
+下面，我会给一些简单的例子来介绍上面的步骤，并最终给出我们的 SQL 语句 BNF 。
+
+### 词法分析 {#lexical-analysis}
+
+例如，我们有这样一条 SQL 语句: `SELECT name FROM students WHERE age > '18';`
+
+在 *词法分析* 阶段，我们将该语句分解为以下 token : `SELECT` , `name` , `FROM` , `students` , `WHERE` , `age` , `>` ,`'18'` , `;`
+
+相信你也明白所谓的 *词法分析* 的作用了，在这一步中，**我们定义一系列规则，来明确在我们定义的语言中什么样的字符可以连接在一起构成一个 token ，什么样的字符自己就是一个 token ，而什么样的字符是非法的。**
+
+具体来说，怎么定义 token 呢？接下来是定义 token 的方法
+
+#### Token的定义 {#defination-of-token}
+
+- 关键词
+
+诸如 `SELECT` 、 `WHERE` 这一类的 token 是我们预先定义好的关键词，这类关键词是可以枚举的
+
+- 比较符
+
+诸如 `>` 这样的字符，自己就可以成为一个单独的 `token` ，这一类情况和关键词类似，记为 `OP`
+
+- 标识符
+
+像是`name`, `students` 这些本身都不属于我们语法的一部分，是根据用户所指定的表而变化的，这部分的数据我们可以统称为 *标识符* ，记为 `MARK` 
+
+- 常量
+
+虽然上面的 SQL 语句中没有，但我们不难想到，被引号包裹的，里面的内容，不论是不是连续的，中间有没有空格，都是常量，记为 `CONST`
+
+
+#### 词法分析结果 {#result-of-lexcal-analysis}
+
+最后，在定义了上面这些 token 之后，展示 *词法分析* 的具体结果
+
+从形式上来说，`SELECT name FROM students WHERE age > 18;` 可以解析成：
+
+`<SELECT>`, `<MARK>`, `<FROM>`, `<MARK>`, `<WHERE>`, `<MARK>`, `<OP>`, `<CONST>`, `<END>`
+
+而具体来说，每一个形式上的 token 都对应一个具体的值，也就是这样的结果：
+
+`SELECT`, `name`, `FROM`, `students`, `WHERE`, `age`, `>`, `18`, `;`
+
+### 语法分析 {#syntactic-analysis}
+
+有了 *词法分析* 的结果，就可以在此基础上进行 *语法分析* 。*语法分析* 的目的是检查 token 连在一起后是不是能符合我们定义的语法 ，并解析生成 *抽象语法树*
+
+#### BNF范式的例子 {#example-of-bnf}
+
+在根据 BNF范式 来解析用户输入时，通常先认为用户输入的内容都属于第一条 BNF范式 ， 随后根据具体情况根据右边的表达式展开即可。
+
+```
+<select-statement> ::= SELECT <column-list> FROM <table-name> WHERE <MARK> <OP> <CONST>;
+<column-list> ::= <column-name> | <column-name>, <column-list>
+<column-name> ::= <MARK>
+<table-name> ::= <MARK>
+<MARK> ::= <letter> {<letter-or-digit>}
+<CONST> ::= '<MARK>'
+<OP> ::= < | = | > | <= | >= | !=
+<letter> ::= a | b | c | ... | z | A | B | C | ... | Z
+<letter-or-digit> ::= <letter> | <digit>
+<digit> ::= 0 | 1 | 2 | ... | 9
+```
+
+上面是一个很简单的 BNF 例子，这个例子可以解析上面给出的 SQL 语句
+
+当然了，它也有不少不足，举例来说，上面我们给出的 BNF范式 只能解析含有一个 WHERE 条件的 SELECT 语句， BNF 是表现力很强的语言，我们可以稍作修改，让我们定义的 SELECT 语句支持任意多个 WHERE 条件：
+
+```
+<select-statement> ::= SELECT <column-list> FROM <table-name> WHERE <condition>
+<column-list> ::= <column-name> | <column-list>, <column-name>
+<column-name> ::= <MARK>
+<table-name> ::= <MARK>
+<condition> ::= <expression> | <condition> <logical-op> <expression>
+<expression> ::= <MARK> <OP> <CONST>
+<logical-op> ::= AND | OR
+<OP> ::= "=" | "<" | ">" | "<=" | ">=" | "!="
+<MARK> ::= <letter> {<letter-or-digit>}
+<CONST> ::= '<string>'
+<string> ::= {<letter-or-digit>}
+<letter> ::= a | b | c | ... | z | A | B | C | ... | Z
+<letter-or-digit> ::= <letter> | <digit>
+<digit> ::= 0 | 1 | 2 | ... | 9
+```
+
+上面的例子里给出了一个支持任意多个 WHERE 条件的 SELECT 语句的 BNF范式
+
+在这篇文章中，我暂时不会给出 BNF范式 应该如何解读的例子，希望读者反复研读上面给出的 2 则例子，对 BNF范式 建立一个大概的印象和理解。
+
+**如果读者阅读 BNF范式 时发现很难完全理解 BNF范式 的意义，在下一篇文章中会有如何根据 BNF范式 编写程序、解析出 AST 的内容，可以参阅那部分的内容。**
+
+#### 根据BNF范式来进行语法解析 {#parsing-with-bnf}
+
+仅仅给出 BNF范式 的方式，对没有编译原理基础的读者可能不友好，读者可能不知道应该如何利用 BNF范式 来解析语句，但在这节内容中，我们仅仅强调 BNF范式 定义的语法可以将用户输入的 SQL语句 解析为 AST。
+
+下面，我们做一个将 SELECT 语句最后解析成 AST 的例子：
+
+考虑下面的 SQL 语句：`SELECT name FROM students WHERE age > '18' AND gender = 'M';`
+
+在完成基本的词法分析，将 SQL语句 转化成 token 后，就可以根据 BNF范式 得到以下的 抽象语法树 ：
+
+```
+<select-statement>
+    ├── <column-list>
+    │       └── <column-name>
+    │              └── name
+    ├── <table-name>
+    │       └── students
+    └── <condition>
+            ├── <expression>
+            │       ├── <MARK>
+            │       │      └── age
+            │       ├── <OP>
+            │       │      └── >
+            │       └── <CONST>
+            │              └── '18'
+            ├── <logical-op>
+            │        └── AND
+            └── <expression>
+                    ├── <MARK>
+                    │      └── gender
+                    ├── <OP>
+                    │      └── =
+                    └── <CONST>
+                           └── 'M'
+```
+
+读者可以发现，AST树 中的所有 *叶子结点* 都是 BNF范式 中定义的不可继续展开(称为*终止符*)的，而 AST树 的 *根节点* 则是第一条 BNF范式。
+
+关于如何根据 BNF 来直接解析出上面这颗 AST 的算法，在本篇文章中暂时不涉及，会在之后的篇幅中给简单介绍。
+
+### 语义分析 {#semantic-analysis}
+
+在有了 AST 的基础上，可以对 AST 进行 *语义分析* ，发现 AST 中符合文法逻辑，但不符合逻辑的地方。
+
+例如，`name` 字段 不存在，`students` 这一 表 不存在，或者是`age` 字段 明明是数字类型，比较的值却是字符串，这一类简单的问题都可以通过语义分析来发现。

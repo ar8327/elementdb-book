@@ -15,3 +15,4 @@ rmd_files:
   - "11-brief-history-of-dbms.Rmd"
   - "12-modules-of-dbms.Rmd"
   - "21-data-model-and-query-language.Rmd"
+  - "22-designing-a-pseudo-sql.Rmd"
