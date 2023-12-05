@@ -16,3 +16,4 @@ rmd_files:
   - "12-modules-of-dbms.Rmd"
   - "21-data-model-and-query-language.Rmd"
   - "22-designing-a-pseudo-sql.Rmd"
+  - "23-implementing-a-sql-parser.Rmd"

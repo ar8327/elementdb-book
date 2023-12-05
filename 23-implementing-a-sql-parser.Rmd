@@ -1,0 +1,246 @@
+\newpage{}
+
+## 实现一个简单SQL解析器 {#implementing-a-sql-parser}
+
+### 自顶向下的语法解析器 {#top-down-parser}
+
+让我们回忆之前提到过的可以描述 SELECT 语句的 BNF范式 ：
+
+```SQL
+<select-statement> ::= SELECT <column-list> FROM <table-name> WHERE <MARK> <OP> <CONST>;
+<column-list> ::= <column-name> | <column-name>, <column-list>
+<column-name> ::= <MARK>
+<table-name> ::= <MARK>
+<MARK> ::= <letter> {<letter-or-digit>}
+<CONST> ::= '<MARK>'
+<OP> ::= < | = | > | <= | >= | !=
+<letter> ::= a | b | c | ... | z | A | B | C | ... | Z
+<letter-or-digit> ::= <letter> | <digit>
+<digit> ::= 0 | 1 | 2 | ... | 9
+```
+
+在这篇文章中，我会一步一步介绍如何使用自顶向下的解析方式来根据 BNF范式 解析这句 SQL ：
+
+```SQL
+SELECT name FROM students WHERE age > '18';
+```
+
+### BNF范式的基本概念 {#intro-to-bnf}
+
+我们首先来回顾一下 BNF范式 ，以这条 BNF范式 为例：
+
+```SQL
+<select-statement> ::= SELECT <column-list> FROM <table-name> WHERE <MARK> <OP> <CONST>;
+```
+
+在这句 BNF范式 的左侧，是一个名为 `<select-statement>` 的 **非终止符**
+
+在 BNF范式 的右侧，是`SELECT <column-list> FROM <table-name> WHERE <MARK> <OP> <CONST>; `，这是一个 **终止符** 与 **非终止符** 混合的 **展开式** 。
+
+其中，`SELECT`、`FROM`、`WHERE`、`;` 是 **终止符** ，而 `<column-list>` `<table-name>` `<MARK>` `<OP>` `<CONST>` 是 **非终止符** 。
+
+从这些描述中你可以发现，所谓的终止符就是常量，是不可以再向外推导的内容，而非终止符则有其他的 BNF范式 可以继续进行推导。
+
+而在根据 BNF范式 推导用户输入生成 AST 时，我们总有一个起始的状态，在这里 `<select-statement>` 就是我们的起始状态。
+
+### 根据BNF范式生成AST的过程 {#generating-a-ast-from-bnf}
+
+接下来，我以这句 SQL 为例，演示如何根据 BNF范式 、自顶向下的解析方法来生成 AST ：
+
+```
+SELECT name FROM students WHERE age > '18';
+```
+
+#### 生成token {#generating-tokens}
+
+不难发现，在进行了简单的 **词法分析** 后，上面的 SQL 语句可以解析为下面的这些 token ：
+
+- SELECT 
+- <letter-or-digit>(name) 
+- FROM 
+- <letter-or-digit>(students) 
+- WHERE 
+- <MARK>(age) 
+- <OP>(>) 
+- <CONST>('18')
+
+#### 自顶向下解析 {#top-down-parsing}
+
+接下来，可以根据 BNF 进行解析，从最顶端的 **非终止符** `<select-statement>`开始，尝试将输入的 token 匹配到这个 BNF范式 。
+
+1. `SELECT` 是 **终止符** ，它与输入的第一个 token 匹配，因此消耗这个 token 。
+
+2. 下一个是 `<column-list>` ，由于 BNF范式 中存在 `<column-list> ::= <column-name> | <column-name>, <column-list>` ，它可以继续扩展为 `<column-name>` ，又可以继续展开为 `<MARK>` 。这里 `<MARK>` 可以进一步扩展为 `<letter> {<letter-or-digit>}` 。在这个例子中，`name` 与这个模式匹配，所以消耗 token `name`。
+
+3. 下一个 **终止符** 是 `FROM` ，与输入的下一个 token 匹配，所以消耗 token `FROM`。
+
+4. 接着是 `<table-name>` 。我们的输入 token 是 `<letter-or-digit>(students)` ，它可以匹配为 `<table-name>` 中的 `<MARK>` 。此时，`students` 匹配 `<letter> {<letter-or-digit>}`，因此消耗 token `students`。
+5. 接下来的 **终止符** `WHERE` 与输入的 token 匹配，所以消耗 token `WHERE` 。
+6. 下一个 **非终止符** 是 `<MARK>`，与输入的 token `<MARK>(age)` 匹配，所以消耗 token `age`。
+7. 下一个 **终止符** `<OP>` 与输入的 token `<OP>(>)` 匹配，所以消耗 token `>`。
+8. 最后，`<CONST>` 与输入的 token `<CONST>('18')` 匹配，所以消耗token `'18'`。
+
+以上，我们成功地使用 BNF范式 和 自顶向下的解析方法 ，将给定的 SQL 语句解析为一系列的 token ，并与 BNF范式 进行匹配。
+
+#### 生成AST（抽象语法树） {#generating-a-ast}
+
+基于上述的解析过程，你可以发现，我们从第一条 BNF范式 出发，通过递归下降的方式直到我们将所有的 token 都推导为 **终止符** ，而从这个推导的过程，我们可以构建一个简化的 AST ：
+
+```Lua
+<select-statement>
+   |
+   |-- SELECT
+   |
+   |-- <column-list>
+   |    |
+   |    |-- <column-name>
+   |         |
+   |         |-- name
+   |
+   |-- FROM
+   |
+   |-- <table-name>
+   |    |
+   |    |-- students
+   |
+   |-- WHERE
+   |
+   |-- <condition>
+        |
+        |-- <MARK>
+        |    |
+        |    |-- age
+        |
+        |-- <OP>
+        |    |
+        |    |-- >
+        |
+        |-- <CONST>
+             |
+             |-- '18'
+```
+
+这样，通过自顶向下的解析方法和 BNF范式 ，我们将一个 SELECT 语句转化为了 AST ，方便之后的 **语义分析** 和 **代码生成**。
+
+#### 用Python实现自顶向下解析Demo {#python-demo-to-generate-an-ast}
+
+上述的过程已经很容易理解，但为了进一步明确，我把解析的过程用 python 代码实现了一下。有需要的读者可以把代码和上面的解析过程进行对照：
+
+```Python
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.children = []
+
+    def add_child(self, child):
+        self.children.append(child)
+
+    def __repr__(self, level=0):
+        ret = "\t" * level + repr(self.value) + "\n"
+        for child in self.children:
+            ret += child.__repr__(level + 1)
+        return ret
+
+def parse(tokens):
+    current_token_index = 0
+    
+    def consume(expected):
+        nonlocal current_token_index
+        if tokens[current_token_index] == expected:
+            current_token_index += 1
+            return True
+        return False
+
+    def parse_mark():
+        nonlocal current_token_index
+        node = Node(tokens[current_token_index])
+        current_token_index += 1
+        return node
+    
+    def parse_op():
+        nonlocal current_token_index
+        node = Node(tokens[current_token_index])
+        current_token_index += 1
+        return node
+
+    def parse_const():
+        nonlocal current_token_index
+        node = Node(tokens[current_token_index])
+        current_token_index += 1
+        return node
+
+    def parse_column_list():
+        node = Node('column-list')
+        while True:
+            node.add_child(parse_mark())
+            if not consume(','):
+                break
+        return node
+
+    def parse_table_name():
+        node =  Node('table-name')
+        node.add_child(parse_mark())
+        return node
+    
+    def parse_where():
+        node = Node('Where')
+        mark = Node('Mark')
+        mark.add_child(parse_mark())
+        op = Node('OP')
+        op.add_child(parse_op())
+        const = Node('Const')
+        const.add_child(parse_const())
+        node.add_child(mark)
+        node.add_child(op)
+        node.add_child(const)
+        return node
+
+    def parse_select_statement():
+        # 解析入口
+        root = Node('select-statement')
+        if not consume('SELECT'):
+            raise ValueError("Expected 'SELECT'")
+        root.add_child(parse_column_list())
+        if not consume('FROM'):
+            raise ValueError("Expected 'FROM'")
+        root.add_child(parse_table_name())
+        if not consume('WHERE'):
+            raise ValueError("Expected 'WHERE'")
+        root.add_child(parse_where())
+        return root
+
+    return parse_select_statement()
+
+# 已经分好的token
+tokens = ['SELECT', 'name', 'FROM', 'students', 'WHERE', 'age', '>', "'18'"]
+
+# 自顶向下解析
+ast = parse(tokens)
+
+print(ast)
+```
+
+上面的 python 代码完全复现了之前描述的自顶向下解析过程，根据 **词法分析** 的结果解析出了一颗 **抽象语法树** ，下面是运行的结果：
+
+```Python
+'select-statement'
+        'column-list'
+                'name'
+        'table-name'
+                'students'
+        'Where'
+                'Mark'
+                        'age'
+                'OP'
+                        '>'
+                'Const'
+                        "'18'"
+```
+
+### LL(1)解析器 {#LL-1-parser}
+
+需要指出，编译原理其实是相对复杂的，这里我们使用的 **语法分析** 方式只是所有语法分析方式中最简单的一种。
+
+具体来说，我们的解析方式总是从左至右解析，并且总是只预读1个 Token ，这样的解析方式被称为 LL(1) ，我们实现的解析器是一个 LL(1) 解析器。
+
+这种方式有它的局限性，例如，它不能处理含有左递归的语法规则，不能处理需要预读 1 个以上 Token 的复杂语法，并且，和自顶向下解析相对应地，也存在自底向上的解析方式，事实上，自底向上的解析方式更能够适应复杂的文法，在业界被广泛使用。
