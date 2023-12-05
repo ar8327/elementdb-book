@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>第 4 章 查询语言 | ElementDB the Book</title>
   <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
-  <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
 
   <meta property="og:title" content="第 4 章 查询语言 | ElementDB the Book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ar8327" />
 
 
-<meta name="date" content="2023-11-18" />
+<meta name="date" content="2023-12-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -186,6 +186,13 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.3" data-path="query-language.html"><a href="query-language.html#syntactic-analysis"><i class="fa fa-check"></i><b>4.2.3</b> 语法分析</a></li>
 <li class="chapter" data-level="4.2.4" data-path="query-language.html"><a href="query-language.html#semantic-analysis"><i class="fa fa-check"></i><b>4.2.4</b> 语义分析</a></li>
 </ul></li>
+<li class="chapter" data-level="4.3" data-path="query-language.html"><a href="query-language.html#implementing-a-sql-parser"><i class="fa fa-check"></i><b>4.3</b> 实现一个简单SQL解析器</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="query-language.html"><a href="query-language.html#top-down-parser"><i class="fa fa-check"></i><b>4.3.1</b> 自顶向下的语法解析器</a></li>
+<li class="chapter" data-level="4.3.2" data-path="query-language.html"><a href="query-language.html#intro-to-bnf"><i class="fa fa-check"></i><b>4.3.2</b> BNF范式的基本概念</a></li>
+<li class="chapter" data-level="4.3.3" data-path="query-language.html"><a href="query-language.html#generating-a-ast-from-bnf"><i class="fa fa-check"></i><b>4.3.3</b> 根据BNF范式生成AST的过程</a></li>
+<li class="chapter" data-level="4.3.4" data-path="query-language.html"><a href="query-language.html#LL-1-parser"><i class="fa fa-check"></i><b>4.3.4</b> LL(1)解析器</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Compiled with bookdown</a></li>
@@ -300,8 +307,8 @@ SELECT * FROM Employees INNER JOIN Departments ON Employees.DepartmentID = Depar
 <p>一个答案是使用 BNF范式（巴科斯范式）。</p>
 <p>在解析一句 SQL 语句是否合法时，主要包括以下三个步骤。</p>
 <p>第一步，<strong>词法分析</strong>，这一步中，我们会把用户输入的 SQL 语句分为一个个的 token ，每个 token 都是 BNF 中定义的关键词。</p>
-<p>第二步，<strong>语法分析</strong>，在这一步，我们分析 token 的排列规则是否符合预先设定的规则，也就是是否符合我们定义的 BNF 范式的要求。经过语法分析后，我们能得到一些结构化的数据，这些结构对应的就是 SQL 语句的解析结果。比较典型的结构体是 Parse Tree 或者 AST (抽象语法树)。</p>
-<p>第三步，<strong>语义分析</strong>，这一步中我们要分析已经确定符合 BNF 范式的语句是否存在语义上的缺陷，例如，是否在字符串类型的字段中插入了数字，等等。</p>
+<p>第二步，<strong>语法分析</strong>，在这一步，我们分析 token 的排列规则是否符合预先设定的规则，也就是是否符合我们定义的 BNF范式 的要求。经过语法分析后，我们能得到一些结构化的数据，这些结构对应的就是 SQL 语句的解析结果。比较典型的结构体是 Parse Tree 或者 AST (抽象语法树)。</p>
+<p>第三步，<strong>语义分析</strong>，这一步中我们要分析已经确定符合 BNF范式 的语句是否存在语义上的缺陷，例如，是否在字符串类型的字段中插入了数字，等等。</p>
 <p>下面，我会给一些简单的例子来介绍上面的步骤，并最终给出我们的 SQL 语句 BNF 。</p>
 </div>
 <div id="lexical-analysis" class="section level3 hasAnchor" number="4.2.2">
@@ -411,6 +418,221 @@ SELECT * FROM Employees INNER JOIN Departments ON Employees.DepartmentID = Depar
 <h3><span class="header-section-number">4.2.4</span> 语义分析<a href="query-language.html#semantic-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>在有了 AST 的基础上，可以对 AST 进行 <em>语义分析</em> ，发现 AST 中符合文法逻辑，但不符合逻辑的地方。</p>
 <p>例如，<code>name</code> 字段 不存在，<code>students</code> 这一 表 不存在，或者是<code>age</code> 字段 明明是数字类型，比较的值却是字符串，这一类简单的问题都可以通过语义分析来发现。</p>
+
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div id="implementing-a-sql-parser" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> 实现一个简单SQL解析器<a href="query-language.html#implementing-a-sql-parser" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="top-down-parser" class="section level3 hasAnchor" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> 自顶向下的语法解析器<a href="query-language.html#top-down-parser" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>让我们回忆之前提到过的可以描述 SELECT 语句的 BNF范式 ：</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="query-language.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">select</span><span class="op">-</span>statement<span class="op">&gt;</span> :<span class="op">:=</span> <span class="kw">SELECT</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> <span class="kw">WHERE</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span> <span class="op">&lt;</span>OP<span class="op">&gt;</span> <span class="op">&lt;</span>CONST<span class="op">&gt;</span>;</span>
+<span id="cb22-2"><a href="query-language.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span> | <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span>, <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span></span>
+<span id="cb22-3"><a href="query-language.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span></span>
+<span id="cb22-4"><a href="query-language.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span></span>
+<span id="cb22-5"><a href="query-language.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>MARK<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>letter<span class="op">&gt;</span> {<span class="op">&lt;</span>letter<span class="op">-</span><span class="kw">or</span><span class="op">-</span>digit<span class="op">&gt;</span>}</span>
+<span id="cb22-6"><a href="query-language.html#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>CONST<span class="op">&gt;</span> :<span class="op">:=</span> <span class="st">&#39;&lt;MARK&gt;&#39;</span></span>
+<span id="cb22-7"><a href="query-language.html#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>OP<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span> | <span class="op">=</span> | <span class="op">&gt;</span> | <span class="op">&lt;=</span> | <span class="op">&gt;=</span> | <span class="op">!=</span></span>
+<span id="cb22-8"><a href="query-language.html#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>letter<span class="op">&gt;</span> :<span class="op">:=</span> a | b | c | <span class="op">..</span>. | z | A | B | C | <span class="op">..</span>. | Z</span>
+<span id="cb22-9"><a href="query-language.html#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>letter<span class="op">-</span><span class="kw">or</span><span class="op">-</span>digit<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>letter<span class="op">&gt;</span> | <span class="op">&lt;</span>digit<span class="op">&gt;</span></span>
+<span id="cb22-10"><a href="query-language.html#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>digit<span class="op">&gt;</span> :<span class="op">:=</span> <span class="dv">0</span> | <span class="dv">1</span> | <span class="dv">2</span> | <span class="op">..</span>. | <span class="dv">9</span></span></code></pre></div>
+<p>在这篇文章中，我会一步一步介绍如何使用自顶向下的解析方式来根据 BNF范式 解析这句 SQL ：</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="query-language.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name <span class="kw">FROM</span> students <span class="kw">WHERE</span> age <span class="op">&gt;</span> <span class="st">&#39;18&#39;</span>;</span></code></pre></div>
+</div>
+<div id="intro-to-bnf" class="section level3 hasAnchor" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> BNF范式的基本概念<a href="query-language.html#intro-to-bnf" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>我们首先来回顾一下 BNF范式 ，以这条 BNF范式 为例：</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="query-language.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">select</span><span class="op">-</span>statement<span class="op">&gt;</span> :<span class="op">:=</span> <span class="kw">SELECT</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> <span class="kw">WHERE</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span> <span class="op">&lt;</span>OP<span class="op">&gt;</span> <span class="op">&lt;</span>CONST<span class="op">&gt;</span>;</span></code></pre></div>
+<p>在这句 BNF范式 的左侧，是一个名为 <code>&lt;select-statement&gt;</code> 的 <strong>非终止符</strong></p>
+<p>在 BNF范式 的右侧，是<code>SELECT &lt;column-list&gt; FROM &lt;table-name&gt; WHERE &lt;MARK&gt; &lt;OP&gt; &lt;CONST&gt;;</code>，这是一个 <strong>终止符</strong> 与 <strong>非终止符</strong> 混合的 <strong>展开式</strong> 。</p>
+<p>其中，<code>SELECT</code>、<code>FROM</code>、<code>WHERE</code>、<code>;</code> 是 <strong>终止符</strong> ，而 <code>&lt;column-list&gt;</code> <code>&lt;table-name&gt;</code> <code>&lt;MARK&gt;</code> <code>&lt;OP&gt;</code> <code>&lt;CONST&gt;</code> 是 <strong>非终止符</strong> 。</p>
+<p>从这些描述中你可以发现，所谓的终止符就是常量，是不可以再向外推导的内容，而非终止符则有其他的 BNF范式 可以继续进行推导。</p>
+<p>而在根据 BNF范式 推导用户输入生成 AST 时，我们总有一个起始的状态，在这里 <code>&lt;select-statement&gt;</code> 就是我们的起始状态。</p>
+</div>
+<div id="generating-a-ast-from-bnf" class="section level3 hasAnchor" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> 根据BNF范式生成AST的过程<a href="query-language.html#generating-a-ast-from-bnf" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>接下来，我以这句 SQL 为例，演示如何根据 BNF范式 、自顶向下的解析方法来生成 AST ：</p>
+<pre><code>SELECT name FROM students WHERE age &gt; &#39;18&#39;;</code></pre>
+<div id="generating-tokens" class="section level4 hasAnchor" number="4.3.3.1">
+<h4><span class="header-section-number">4.3.3.1</span> 生成token<a href="query-language.html#generating-tokens" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>不难发现，在进行了简单的 <strong>词法分析</strong> 后，上面的 SQL 语句可以解析为下面的这些 token ：</p>
+<ul>
+<li>SELECT</li>
+<li><letter-or-digit>(name)</li>
+<li>FROM</li>
+<li><letter-or-digit>(students)</li>
+<li>WHERE</li>
+<li><MARK>(age)</li>
+<li><OP>(&gt;)</li>
+<li><CONST>(‘18’)</li>
+</ul>
+</div>
+<div id="top-down-parsing" class="section level4 hasAnchor" number="4.3.3.2">
+<h4><span class="header-section-number">4.3.3.2</span> 自顶向下解析<a href="query-language.html#top-down-parsing" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>接下来，可以根据 BNF 进行解析，从最顶端的 <strong>非终止符</strong> <code>&lt;select-statement&gt;</code>开始，尝试将输入的 token 匹配到这个 BNF范式 。</p>
+<ol style="list-style-type: decimal">
+<li><p><code>SELECT</code> 是 <strong>终止符</strong> ，它与输入的第一个 token 匹配，因此消耗这个 token 。</p></li>
+<li><p>下一个是 <code>&lt;column-list&gt;</code> ，由于 BNF范式 中存在 <code>&lt;column-list&gt; ::= &lt;column-name&gt; | &lt;column-name&gt;, &lt;column-list&gt;</code> ，它可以继续扩展为 <code>&lt;column-name&gt;</code> ，又可以继续展开为 <code>&lt;MARK&gt;</code> 。这里 <code>&lt;MARK&gt;</code> 可以进一步扩展为 <code>&lt;letter&gt; {&lt;letter-or-digit&gt;}</code> 。在这个例子中，<code>name</code> 与这个模式匹配，所以消耗 token <code>name</code>。</p></li>
+<li><p>下一个 <strong>终止符</strong> 是 <code>FROM</code> ，与输入的下一个 token 匹配，所以消耗 token <code>FROM</code>。</p></li>
+<li><p>接着是 <code>&lt;table-name&gt;</code> 。我们的输入 token 是 <code>&lt;letter-or-digit&gt;(students)</code> ，它可以匹配为 <code>&lt;table-name&gt;</code> 中的 <code>&lt;MARK&gt;</code> 。此时，<code>students</code> 匹配 <code>&lt;letter&gt; {&lt;letter-or-digit&gt;}</code>，因此消耗 token <code>students</code>。</p></li>
+<li><p>接下来的 <strong>终止符</strong> <code>WHERE</code> 与输入的 token 匹配，所以消耗 token <code>WHERE</code> 。</p></li>
+<li><p>下一个 <strong>非终止符</strong> 是 <code>&lt;MARK&gt;</code>，与输入的 token <code>&lt;MARK&gt;(age)</code> 匹配，所以消耗 token <code>age</code>。</p></li>
+<li><p>下一个 <strong>终止符</strong> <code>&lt;OP&gt;</code> 与输入的 token <code>&lt;OP&gt;(&gt;)</code> 匹配，所以消耗 token <code>&gt;</code>。</p></li>
+<li><p>最后，<code>&lt;CONST&gt;</code> 与输入的 token <code>&lt;CONST&gt;('18')</code> 匹配，所以消耗token <code>'18'</code>。</p></li>
+</ol>
+<p>以上，我们成功地使用 BNF范式 和 自顶向下的解析方法 ，将给定的 SQL 语句解析为一系列的 token ，并与 BNF范式 进行匹配。</p>
+</div>
+<div id="generating-a-ast" class="section level4 hasAnchor" number="4.3.3.3">
+<h4><span class="header-section-number">4.3.3.3</span> 生成AST（抽象语法树）<a href="query-language.html#generating-a-ast" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>基于上述的解析过程，你可以发现，我们从第一条 BNF范式 出发，通过递归下降的方式直到我们将所有的 token 都推导为 <strong>终止符</strong> ，而从这个推导的过程，我们可以构建一个简化的 AST ：</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb26-1"><a href="query-language.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="fu">select</span><span class="op">-</span>statement<span class="op">&gt;</span></span>
+<span id="cb26-2"><a href="query-language.html#cb26-2" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-3"><a href="query-language.html#cb26-3" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- SELECT</span></span>
+<span id="cb26-4"><a href="query-language.html#cb26-4" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-5"><a href="query-language.html#cb26-5" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;column-list&gt;</span></span>
+<span id="cb26-6"><a href="query-language.html#cb26-6" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-7"><a href="query-language.html#cb26-7" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span><span class="co">-- &lt;column-name&gt;</span></span>
+<span id="cb26-8"><a href="query-language.html#cb26-8" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>         <span class="op">|</span></span>
+<span id="cb26-9"><a href="query-language.html#cb26-9" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>         <span class="op">|</span><span class="co">-- name</span></span>
+<span id="cb26-10"><a href="query-language.html#cb26-10" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-11"><a href="query-language.html#cb26-11" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- FROM</span></span>
+<span id="cb26-12"><a href="query-language.html#cb26-12" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-13"><a href="query-language.html#cb26-13" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;table-name&gt;</span></span>
+<span id="cb26-14"><a href="query-language.html#cb26-14" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-15"><a href="query-language.html#cb26-15" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span><span class="co">-- students</span></span>
+<span id="cb26-16"><a href="query-language.html#cb26-16" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-17"><a href="query-language.html#cb26-17" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- WHERE</span></span>
+<span id="cb26-18"><a href="query-language.html#cb26-18" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-19"><a href="query-language.html#cb26-19" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;condition&gt;</span></span>
+<span id="cb26-20"><a href="query-language.html#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span></span>
+<span id="cb26-21"><a href="query-language.html#cb26-21" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;MARK&gt;</span></span>
+<span id="cb26-22"><a href="query-language.html#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-23"><a href="query-language.html#cb26-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span><span class="co">-- age</span></span>
+<span id="cb26-24"><a href="query-language.html#cb26-24" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span></span>
+<span id="cb26-25"><a href="query-language.html#cb26-25" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;OP&gt;</span></span>
+<span id="cb26-26"><a href="query-language.html#cb26-26" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-27"><a href="query-language.html#cb26-27" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span><span class="co">-- &gt;</span></span>
+<span id="cb26-28"><a href="query-language.html#cb26-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span></span>
+<span id="cb26-29"><a href="query-language.html#cb26-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;CONST&gt;</span></span>
+<span id="cb26-30"><a href="query-language.html#cb26-30" aria-hidden="true" tabindex="-1"></a>             <span class="op">|</span></span>
+<span id="cb26-31"><a href="query-language.html#cb26-31" aria-hidden="true" tabindex="-1"></a>             <span class="op">|</span><span class="co">-- &#39;18&#39;</span></span></code></pre></div>
+<p>这样，通过自顶向下的解析方法和 BNF范式 ，我们将一个 SELECT 语句转化为了 AST ，方便之后的 <strong>语义分析</strong> 和 <strong>代码生成</strong>。</p>
+</div>
+<div id="python-demo-to-generate-an-ast" class="section level4 hasAnchor" number="4.3.3.4">
+<h4><span class="header-section-number">4.3.3.4</span> 用Python实现自顶向下解析Demo<a href="query-language.html#python-demo-to-generate-an-ast" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>上述的过程已经很容易理解，但为了进一步明确，我把解析的过程用 python 代码实现了一下。有需要的读者可以把代码和上面的解析过程进行对照：</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="query-language.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Node:</span>
+<span id="cb27-2"><a href="query-language.html#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value):</span>
+<span id="cb27-3"><a href="query-language.html#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
+<span id="cb27-4"><a href="query-language.html#cb27-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.children <span class="op">=</span> []</span>
+<span id="cb27-5"><a href="query-language.html#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="query-language.html#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> add_child(<span class="va">self</span>, child):</span>
+<span id="cb27-7"><a href="query-language.html#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.children.append(child)</span>
+<span id="cb27-8"><a href="query-language.html#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="query-language.html#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>, level<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb27-10"><a href="query-language.html#cb27-10" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span> <span class="op">*</span> level <span class="op">+</span> <span class="bu">repr</span>(<span class="va">self</span>.value) <span class="op">+</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span></span>
+<span id="cb27-11"><a href="query-language.html#cb27-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> child <span class="kw">in</span> <span class="va">self</span>.children:</span>
+<span id="cb27-12"><a href="query-language.html#cb27-12" aria-hidden="true" tabindex="-1"></a>            ret <span class="op">+=</span> child.<span class="fu">__repr__</span>(level <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb27-13"><a href="query-language.html#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ret</span>
+<span id="cb27-14"><a href="query-language.html#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="query-language.html#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parse(tokens):</span>
+<span id="cb27-16"><a href="query-language.html#cb27-16" aria-hidden="true" tabindex="-1"></a>    current_token_index <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb27-17"><a href="query-language.html#cb27-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-18"><a href="query-language.html#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> consume(expected):</span>
+<span id="cb27-19"><a href="query-language.html#cb27-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-20"><a href="query-language.html#cb27-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> tokens[current_token_index] <span class="op">==</span> expected:</span>
+<span id="cb27-21"><a href="query-language.html#cb27-21" aria-hidden="true" tabindex="-1"></a>            current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-22"><a href="query-language.html#cb27-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb27-23"><a href="query-language.html#cb27-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb27-24"><a href="query-language.html#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="query-language.html#cb27-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_mark():</span>
+<span id="cb27-26"><a href="query-language.html#cb27-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-27"><a href="query-language.html#cb27-27" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
+<span id="cb27-28"><a href="query-language.html#cb27-28" aria-hidden="true" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-29"><a href="query-language.html#cb27-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-30"><a href="query-language.html#cb27-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-31"><a href="query-language.html#cb27-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_op():</span>
+<span id="cb27-32"><a href="query-language.html#cb27-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-33"><a href="query-language.html#cb27-33" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
+<span id="cb27-34"><a href="query-language.html#cb27-34" aria-hidden="true" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-35"><a href="query-language.html#cb27-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-36"><a href="query-language.html#cb27-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-37"><a href="query-language.html#cb27-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_const():</span>
+<span id="cb27-38"><a href="query-language.html#cb27-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-39"><a href="query-language.html#cb27-39" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
+<span id="cb27-40"><a href="query-language.html#cb27-40" aria-hidden="true" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-41"><a href="query-language.html#cb27-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-42"><a href="query-language.html#cb27-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-43"><a href="query-language.html#cb27-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_column_list():</span>
+<span id="cb27-44"><a href="query-language.html#cb27-44" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(<span class="st">&#39;column-list&#39;</span>)</span>
+<span id="cb27-45"><a href="query-language.html#cb27-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb27-46"><a href="query-language.html#cb27-46" aria-hidden="true" tabindex="-1"></a>            node.add_child(parse_mark())</span>
+<span id="cb27-47"><a href="query-language.html#cb27-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;,&#39;</span>):</span>
+<span id="cb27-48"><a href="query-language.html#cb27-48" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb27-49"><a href="query-language.html#cb27-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-50"><a href="query-language.html#cb27-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-51"><a href="query-language.html#cb27-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_table_name():</span>
+<span id="cb27-52"><a href="query-language.html#cb27-52" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span>  Node(<span class="st">&#39;table-name&#39;</span>)</span>
+<span id="cb27-53"><a href="query-language.html#cb27-53" aria-hidden="true" tabindex="-1"></a>        node.add_child(parse_mark())</span>
+<span id="cb27-54"><a href="query-language.html#cb27-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-55"><a href="query-language.html#cb27-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-56"><a href="query-language.html#cb27-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_where():</span>
+<span id="cb27-57"><a href="query-language.html#cb27-57" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(<span class="st">&#39;Where&#39;</span>)</span>
+<span id="cb27-58"><a href="query-language.html#cb27-58" aria-hidden="true" tabindex="-1"></a>        mark <span class="op">=</span> Node(<span class="st">&#39;Mark&#39;</span>)</span>
+<span id="cb27-59"><a href="query-language.html#cb27-59" aria-hidden="true" tabindex="-1"></a>        mark.add_child(parse_mark())</span>
+<span id="cb27-60"><a href="query-language.html#cb27-60" aria-hidden="true" tabindex="-1"></a>        op <span class="op">=</span> Node(<span class="st">&#39;OP&#39;</span>)</span>
+<span id="cb27-61"><a href="query-language.html#cb27-61" aria-hidden="true" tabindex="-1"></a>        op.add_child(parse_op())</span>
+<span id="cb27-62"><a href="query-language.html#cb27-62" aria-hidden="true" tabindex="-1"></a>        const <span class="op">=</span> Node(<span class="st">&#39;Const&#39;</span>)</span>
+<span id="cb27-63"><a href="query-language.html#cb27-63" aria-hidden="true" tabindex="-1"></a>        const.add_child(parse_const())</span>
+<span id="cb27-64"><a href="query-language.html#cb27-64" aria-hidden="true" tabindex="-1"></a>        node.add_child(mark)</span>
+<span id="cb27-65"><a href="query-language.html#cb27-65" aria-hidden="true" tabindex="-1"></a>        node.add_child(op)</span>
+<span id="cb27-66"><a href="query-language.html#cb27-66" aria-hidden="true" tabindex="-1"></a>        node.add_child(const)</span>
+<span id="cb27-67"><a href="query-language.html#cb27-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-68"><a href="query-language.html#cb27-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-69"><a href="query-language.html#cb27-69" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_select_statement():</span>
+<span id="cb27-70"><a href="query-language.html#cb27-70" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 解析入口</span></span>
+<span id="cb27-71"><a href="query-language.html#cb27-71" aria-hidden="true" tabindex="-1"></a>        root <span class="op">=</span> Node(<span class="st">&#39;select-statement&#39;</span>)</span>
+<span id="cb27-72"><a href="query-language.html#cb27-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;SELECT&#39;</span>):</span>
+<span id="cb27-73"><a href="query-language.html#cb27-73" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;SELECT&#39;&quot;</span>)</span>
+<span id="cb27-74"><a href="query-language.html#cb27-74" aria-hidden="true" tabindex="-1"></a>        root.add_child(parse_column_list())</span>
+<span id="cb27-75"><a href="query-language.html#cb27-75" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;FROM&#39;</span>):</span>
+<span id="cb27-76"><a href="query-language.html#cb27-76" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;FROM&#39;&quot;</span>)</span>
+<span id="cb27-77"><a href="query-language.html#cb27-77" aria-hidden="true" tabindex="-1"></a>        root.add_child(parse_table_name())</span>
+<span id="cb27-78"><a href="query-language.html#cb27-78" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;WHERE&#39;</span>):</span>
+<span id="cb27-79"><a href="query-language.html#cb27-79" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;WHERE&#39;&quot;</span>)</span>
+<span id="cb27-80"><a href="query-language.html#cb27-80" aria-hidden="true" tabindex="-1"></a>        root.add_child(parse_where())</span>
+<span id="cb27-81"><a href="query-language.html#cb27-81" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> root</span>
+<span id="cb27-82"><a href="query-language.html#cb27-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-83"><a href="query-language.html#cb27-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> parse_select_statement()</span>
+<span id="cb27-84"><a href="query-language.html#cb27-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-85"><a href="query-language.html#cb27-85" aria-hidden="true" tabindex="-1"></a><span class="co"># 已经分好的token</span></span>
+<span id="cb27-86"><a href="query-language.html#cb27-86" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [<span class="st">&#39;SELECT&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;FROM&#39;</span>, <span class="st">&#39;students&#39;</span>, <span class="st">&#39;WHERE&#39;</span>, <span class="st">&#39;age&#39;</span>, <span class="st">&#39;&gt;&#39;</span>, <span class="st">&quot;&#39;18&#39;&quot;</span>]</span>
+<span id="cb27-87"><a href="query-language.html#cb27-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-88"><a href="query-language.html#cb27-88" aria-hidden="true" tabindex="-1"></a><span class="co"># 自顶向下解析</span></span>
+<span id="cb27-89"><a href="query-language.html#cb27-89" aria-hidden="true" tabindex="-1"></a>ast <span class="op">=</span> parse(tokens)</span>
+<span id="cb27-90"><a href="query-language.html#cb27-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-91"><a href="query-language.html#cb27-91" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ast)</span></code></pre></div>
+<p>上面的 python 代码完全复现了之前描述的自顶向下解析过程，根据 <strong>词法分析</strong> 的结果解析出了一颗 <strong>抽象语法树</strong> ，下面是运行的结果：</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="query-language.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;select-statement&#39;</span></span>
+<span id="cb28-2"><a href="query-language.html#cb28-2" aria-hidden="true" tabindex="-1"></a>        <span class="co">&#39;column-list&#39;</span></span>
+<span id="cb28-3"><a href="query-language.html#cb28-3" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;name&#39;</span></span>
+<span id="cb28-4"><a href="query-language.html#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">&#39;table-name&#39;</span></span>
+<span id="cb28-5"><a href="query-language.html#cb28-5" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;students&#39;</span></span>
+<span id="cb28-6"><a href="query-language.html#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">&#39;Where&#39;</span></span>
+<span id="cb28-7"><a href="query-language.html#cb28-7" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;Mark&#39;</span></span>
+<span id="cb28-8"><a href="query-language.html#cb28-8" aria-hidden="true" tabindex="-1"></a>                        <span class="co">&#39;age&#39;</span></span>
+<span id="cb28-9"><a href="query-language.html#cb28-9" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;OP&#39;</span></span>
+<span id="cb28-10"><a href="query-language.html#cb28-10" aria-hidden="true" tabindex="-1"></a>                        <span class="co">&#39;&gt;&#39;</span></span>
+<span id="cb28-11"><a href="query-language.html#cb28-11" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;Const&#39;</span></span>
+<span id="cb28-12"><a href="query-language.html#cb28-12" aria-hidden="true" tabindex="-1"></a>                        <span class="co">&quot;&#39;18&#39;&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="LL-1-parser" class="section level3 hasAnchor" number="4.3.4">
+<h3><span class="header-section-number">4.3.4</span> LL(1)解析器<a href="query-language.html#LL-1-parser" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>需要指出，编译原理其实是相对复杂的，这里我们使用的 <strong>语法分析</strong> 方式只是所有语法分析方式中最简单的一种。</p>
+<p>具体来说，我们的解析方式总是从左至右解析，并且总是只预读1个 Token ，这样的解析方式被称为 LL(1) ，我们实现的解析器是一个 LL(1) 解析器。</p>
+<p>这种方式有它的局限性，例如，它不能处理含有左递归的语法规则，不能处理需要预读 1 个以上 Token 的复杂语法，并且，和自顶向下解析相对应地，也存在自底向上的解析方式，事实上，自底向上的解析方式更能够适应复杂的文法，在业界被广泛使用。</p>
 
 </div>
 </div>

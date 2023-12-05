@@ -39,3 +39,12 @@ syntactic-analysis
 example-of-bnf
 parsing-with-bnf
 semantic-analysis
+implementing-a-sql-parser
+top-down-parser
+intro-to-bnf
+generating-a-ast-from-bnf
+generating-tokens
+top-down-parsing
+generating-a-ast
+python-demo-to-generate-an-ast
+LL-1-parser
