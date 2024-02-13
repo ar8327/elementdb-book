@@ -3,6 +3,8 @@ fig:employee-physical-view
 fig:latency-numbers
 fig:query-language
 fig:ahci-standard
+fig:chs-to-lba
+fig:page-cache-in-linux
 preface
 intro
 building-a-employee-management-system
@@ -54,3 +56,9 @@ harddrives-and-os
 how-os-recongize-hdds
 abstraction-of-hdds
 block-device
+harddrive-characteristics-and-cache
+minimum-read-write-unit
+partitions
+benefits-of-using-a-whole-partition-as-a-db-file
+how-linux-acclerates-file-rw
+o_direct
