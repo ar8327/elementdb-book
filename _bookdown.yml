@@ -17,3 +17,4 @@ rmd_files:
   - "21-data-model-and-query-language.Rmd"
   - "22-designing-a-pseudo-sql.Rmd"
   - "23-implementing-a-sql-parser.Rmd"
+  - "31-harddrives-and-os.Rmd"
