@@ -1,0 +1,204 @@
+\newpage{}
+
+## 机械硬盘特性与文件缓存 {#harddrive-characteristics-and-cache}
+
+在上一节，我们聊了硬盘与系统交互的标准接口，但没有涉及到硬盘的硬件特性。在这一节，我们简单讨论一下硬盘的一些基本硬件特性，以及操作系统对这些硬件特性所做的优化工作。
+
+### 最小读写单位 {#minimum-read-write-unit}
+
+磁盘在经过操作系统的封装后，对用户来说有和内存几乎相同的读写方式。就像内存是一个大数组一样，磁盘本身也被“块” (Block) 这一概念分割，对于磁盘来说，一个“块”的大小通常是 512B (机械硬盘和大部分 SSD )~4K (少量新款 SSD 系统)，在访问磁盘数据的时候，也是通过 Offset 的方式来访问，你告诉硬盘需要第 4 页(从 0 开始)，那么硬盘就会把第 2048~2560Byte 的数据给你。
+
+硬盘的块大小可以通过`smartctl`工具获得
+
+```Shell
+# smartctl -a /dev/nvme0n1
+smartctl 7.2 2020-12-30 r5155 [x86_64-linux-5.15.0-58-generic] (local build)
+Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org
+
+=== START OF INFORMATION SECTION ===
+Model Number:                       INTEL SSDPEKKF010T8L
+Serial Number:                      PHHH843401491P0E
+Firmware Version:                   L08P
+PCI Vendor/Subsystem ID:            0x8086
+IEEE OUI Identifier:                0x5cd2e4
+Controller ID:                      1
+NVMe Version:                       1.3
+Number of Namespaces:               1
+Namespace 1 Size/Capacity:          1,024,209,543,168 [1.02 TB]
+Namespace 1 Formatted LBA Size:     512
+Namespace 1 IEEE EUI-64:            5cd2e4 2591417dab
+Local Time is:                      Wed Jan 25 07:44:23 2023 UTC
+Firmware Updates (0x14):            2 Slots, no Reset required
+Optional Admin Commands (0x0017):   Security Format Frmw_DL Self_Test
+Optional NVM Commands (0x005f):     Comp Wr_Unc DS_Mngmt Wr_Zero Sav/Sel_Feat Timestmp
+Log Page Attributes (0x0f):         S/H_per_NS Cmd_Eff_Lg Ext_Get_Lg Telmtry_Lg
+Maximum Data Transfer Size:         64 Pages
+Warning  Comp. Temp. Threshold:     75 Celsius
+Critical Comp. Temp. Threshold:     80 Celsius
+...
+```
+
+可以看到，这块硬盘的块大小是 512 Byte。
+
+这样的地址在OS中称为 LBA (Logical Block Address) ，当然，实际 上LBA 之所以是 Logical Address 的是因为他并不像内存那样具备实际意义。
+在机械硬盘上，LBA 会被硬盘转换为 CHS 格式 (第C磁盘第H柱面第S扇区，我从网上找了一张示意图) ，在现代的 SSD 上，LBA 与闪存的 Block 或者 Page 亦无固定的对应关系，是在运行时由硬盘的固件动态分配的。
+
+```{r chs-to-lba, fig.cap='CHS与扇区的对应关系', out.width='75%', echo = FALSE}
+knitr::include_graphics('./images/intro-to-store/chs-to-lba.png')
+```
+
+### 分区 {#partitions}
+
+人们为了 **提高机械硬盘的性能** ， **会把硬盘分为多个区。外圈的硬盘速度比内圈慢，而扇区号从小到大对应的是从硬盘的外圈到硬盘的内圈，因此系统装在开始的分区能够获得更好的性能** 。（在 SSD 上，分区对性能没有什么帮助）
+
+所谓分区就像我们在一个分区内创建了一个个文件一样，**也是在一块连续空间上由元数据记录、划分的一块块空间**，在以前，分区表的格式叫 MBR ，由于 MBR 是 90 年代的产物，存在诸多如最大分区大小的限制，后续由 GPT 取代。关于 MBR 和 GPT 并没有太多与我们相关的细节需要了解，我们只需要知道这些是规定了分区起始位置和结束为止的元数据即可。如果你对这块内容有更多兴趣，可以参阅：[MBR与GPT](https://zhuanlan.zhihu.com/p/26098509)
+
+### 使用整个分区作为数据库文件的好处 {#benefits-of-using-a-whole-partition-as-a-db-file}
+
+说了这么多，终于可以聊一些和数据库有关的话题了。
+
+在 Oracle 数据库中，用户是可以选择一整个分区给数据库使用的。为什么 Oracle 要用这种方式来管理数据，而不是单纯使用一个文件呢？要知道，文件比分区更容易保存、备份，倘若空间不够用，要给文件扩容时，也只需要把文件复制进一个更大的分区，而不是像分区一样来回调整分区表和修正分区数据。**在维护便利性上，文件是比分区更好的**，尽管如此，为什么 Oracle 还是提供了使用分区的选项呢？
+
+答案很简单，因为 Oracle 想要排除 OS 的一切影响。
+
+OS 提供的文件管理机制并不适合数据库使用，举例来说，大部分的 OS 都会对文件进行预读操作，但遗憾的是 OS 并不理解数据库的文件结构，按照简单的顺序预读也许只会造成资源的浪费。OS 为什么要进行预读操作呢？这与硬盘的特性息息相关，因为硬盘本身的访问速度慢，带宽低，**而大部分对硬盘数据的读写都遵循数据局部性，也就是经常需要被一起访问的数据通常都存在相邻的地方**。
+
+### Linux如何加速文件的读写 {#how-linux-acclerates-file-rw}
+
+以 Linux 为例，简单介绍一下 OS 为了加速文件读写都会做些什么。
+
+需要注意，下面的部分说法是不准确的，只能给你一个大概的蓝图，如果你对具体的细节更有兴趣，应该阅读其他拓展材料。
+
+补充一个我记忆中的趣事，Windows 在 Windows XP 开始引入了一个名为 Prefetch 的服务，这个服务的作用是在启动程序前进行劫持动作，由 OS 判断程序是否经常读取某些文件，如果发现程序经常读取某些特定文件，就会在启动程序前尝试将特定文件加载到内存中，通过这种方式来加快程序之后的运行速度。
+
+类似的机制在 Windows Vista 中进化为了一个名叫 SuperFetch 的服务，微软官方似乎并没有仔细介绍工作原理的文档，但可以肯定 Superfetch 比 Prefetch 用了更激进的、主动式的预读策略，以至于那个年代的 Windows 经常把用户2-4G的内存占满，引起了用户(特别是中国，因为某些特殊原因中国用户有看自己还剩多少内存的习惯)的强烈不满。
+
+由于 Windows 的文档实在匮乏，我也不了解 Windows 的细节，上面的 Windows 的例子只是为了让读者对预读的重要性有一个基本的认知。接下来以 Linux 为例介绍 OS 对文件的预读操作。
+
+在开始介绍之前，我会先罗列一些 Linux 缓存文件的基础概念。
+
+1. 原则上，除非在挂载文件系统时或者用户要求，所有的读写请求均会经过磁盘缓存
+
+2. 用户在写入文件时，文件会被先写进内存中，在内存中被称为 Dirty Page ，需要等待内核在内核认为合适的时机或者用户手动执行 `fsync` 命令时同步到硬盘
+
+3. 读取文件时也是同理，系统会首先判断当前要读取的部分在不在 Page Cache 中，如果命中就直接使用
+
+4. Linux 系统根据局部性原理会对文件进行预读，并不是你请求哪些它就会读哪些到内存中
+
+5. 如果应用程序修改了文件的一个部分，这部分还在缓存中，那么要让缓存失效
+
+
+```{r page-cache-in-linux, fig.cap='Linux 的 Page Cache', out.width='75%', echo = FALSE}
+knitr::include_graphics('./images/intro-to-store/page-cache-in-linux.png')
+```
+
+*图源. [Linux 的 Page Cache](https://spongecaptain.cool/SimpleClearFileIO/1. page cache.html) *
+
+**我觉得这篇文章以及这一系列的文章都写得不错，对IO有进一步了解兴趣的话可以去看**
+
+接下来，通过几个实验来验证 Linux 的文件预读和缓存机制
+
+首先，我们准备一个 4G 内存的机器，和一个 8G 的文件，并保证这个文件不在系统的 Page Cache 中
+
+```Shell
+# free -wh
+               total        used        free      shared     buffers       cache   available
+Mem:           3.8Gi       192Mi       3.4Gi       716Ki        16Mi       203Mi       3.6Gi
+Swap:             0B          0B          0B
+
+# vmtouch -v testfile.img # 展示文件有多少在内存缓存中
+testfile.img
+[                                                            ] 0/2048000
+
+           Files: 1
+     Directories: 0
+  Resident Pages: 0/2048000  0/7G  0%
+         Elapsed: 0.10211 seconds
+```
+
+接下来，我们读取一下这个文件，这是第一次读取后的结果
+
+```Shell
+# vmtouch -v testfile.img
+testfile.img
+[oooooooooooooooooooooooooooooooooooOOOOOOOOOOOOOOOOOOOOOOOOO] 911200/2048000
+
+           Files: 1
+     Directories: 0
+  Resident Pages: 911200/2048000  3G/7G  44.5%
+         Elapsed: 0.31019 seconds
+         
+# free -wh
+               total        used        free      shared     buffers       cache   available
+Mem:           3.8Gi       189Mi        31Mi       716Ki        15Mi       3.6Gi       3.6Gi
+Swap:             0B          0B          0B
+```
+
+**可以看到，随着文件的读取，系统只缓存了后半部分的内容，这是由于前半部分在内存中放不下了，被置换出去了。**
+
+因此，**可以发现一个简单的道理，对于内存中存储不下的巨量文件，如果这个文件不满足局部性原理，缓存几乎是没有作用的。**我们可以尝试着多读取几遍这个文件，看看性能有没有改善。
+
+```Shell
+# time cat testfile.img > /dev/null
+cat testfile.img > /dev/null  0.32s user 36.07s system 20% cpu 3:01.72 total
+# time cat testfile.img > /dev/null
+cat testfile.img > /dev/null  0.24s user 34.55s system 19% cpu 3:00.17 total
+# time cat testfile.img > /dev/null
+cat testfile.img > /dev/null  0.28s user 32.02s system 19% cpu 2:46.45 total
+```
+
+可以看到，性能几乎没有改善。
+
+**这个问题在设计数据库时也是需要关注的，如果要利用操作系统的缓存，那么可能会同时访问的数据要放在相邻的位置上。**
+
+接下来，我们实验系统的文件预读功能，我会把 Page Cache 先全部清除，然后从文件中读取 120K 的文件，我们看看系统读取了多少数据到内存中。
+
+```Shell
+# sysctl -w vm.drop_caches=3
+vm.drop_caches = 3
+
+# vmtouch -v testfile.img
+testfile.img
+[                                                            ] 0/2048000
+
+           Files: 1
+     Directories: 0
+  Resident Pages: 0/2048000  0/7G  0%
+         Elapsed: 0.11164 seconds
+         
+# dd if=testfile.img of=/dev/null bs=1K count=120 
+120+0 records in
+120+0 records out
+122880 bytes (123 kB, 120 KiB) copied, 0.0074944 s, 16.4 MB/s
+
+# vmtouch -v testfile.img                         
+testfile.img
+[o                                                           ] 92/2048000
+
+           Files: 1
+     Directories: 0
+  Resident Pages: 92/2048000  368K/7G  0.00449%
+         Elapsed: 0.13552 seconds
+```
+
+可以看到，虽然我们只读取了 120K 的数据，**但系统把文件开头的 368K 都读进了内存中。**
+
+### O_DIRECT
+
+有没有办法完全阻止操作系统来做这些文件的缓存操作呢？
+
+如果你做了一些简单的搜索，你会发现网络上大量推崇使用 `O_DIRECT` 来绕过 Linux 系统的 Page Cache ，这并不一定正确。
+
+**O_DIRECT只是程序向系统许下的一个愿望，而非一个命令**
+
+在遇到这些需要明确系统行为的问题时，我鼓励读者阅读官方的文档，而不是阅读博客之类的二手知识。
+
+[open(2) - Linux manual page](https://man7.org/linux/man-pages/man2/open.2.html) 这是官方 manual 中关于 `O_DIRECT` 的解释
+
+> ​       **O_DIRECT** (since Linux 2.4.10)              **Try to minimize cache effects of the I/O to and from this**              **file**.  In general this will degrade performance, but it is              useful in special situations, such as when applications do              their own caching.  File I/O is done directly to/from              user-space buffers.  The **O_DIRECT** flag on its own makes an              effort to transfer data synchronously, **but does not give**              **the guarantees of the O_SYNC flag that data and necessary**              **metadata are transferred**.  To guarantee synchronous I/O,              **O_SYNC** must be used in addition to **O_DIRECT**.  See NOTES              below for further discussion.               A semantically similar (but deprecated) interface for              block devices is described in **raw**(8).
+
+可以看到，文档中说对于使用 `O_DIRECT` 这一 flag 打开的文件，系统只是会尽力保证不使用缓存，不能提供任何保证。同时还特别强调，如果要保证完成写入操作时文件已经写入到磁盘上，应该额外使用 `O_SYNC` 这一 flag。
+
+那么 `O_DIRECT` 为什么只能提供尽力的保证呢？因为事实上最终的行为还依赖于 Linux 内核的版本、磁盘挂载时的选项、文件系统提供的支持等。
+
+举例来说，某些文件系统（如 btrfs）在修改文件时并不会在原地进行修改，而是使用 Copy On Write 的方式来优化性能，这些实现细节都会影响最终提供的保证。总结来说，对于不直接使用分区而是使用文件的数据库来说，文件系统是一个极大的变数。例如在[www.phoronix.com](https://www.phoronix.com/news/Linux-5.14-File-Systems)中，评测了不同文件系统对数据库性能的影响。

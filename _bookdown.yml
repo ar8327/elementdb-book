@@ -18,3 +18,4 @@ rmd_files:
   - "22-designing-a-pseudo-sql.Rmd"
   - "23-implementing-a-sql-parser.Rmd"
   - "31-harddrives-and-os.Rmd"
+  - "32-harddrive-characteristics-and-cache.Rmd"
