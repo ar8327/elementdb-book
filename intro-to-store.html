@@ -210,6 +210,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.4" data-path="intro-to-store.html"><a href="intro-to-store.html#how-linux-acclerates-file-rw"><i class="fa fa-check"></i><b>5.2.4</b> Linux如何加速文件的读写</a></li>
 <li class="chapter" data-level="5.2.5" data-path="intro-to-store.html"><a href="intro-to-store.html#o_direct"><i class="fa fa-check"></i><b>5.2.5</b> O_DIRECT</a></li>
 </ul></li>
+<li class="chapter" data-level="5.3" data-path="intro-to-store.html"><a href="intro-to-store.html#ssd-characteristics-and-random-io"><i class="fa fa-check"></i><b>5.3</b> SSD特性与随机读写性能</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Compiled with bookdown</a></li>
@@ -513,7 +514,75 @@ testfile.img
 <p>那么 <code>O_DIRECT</code> 为什么只能提供尽力的保证呢？因为事实上最终的行为还依赖于 Linux 内核的版本、磁盘挂载时的选项、文件系统提供的支持等。</p>
 <p>举例来说，某些文件系统（如 btrfs）在修改文件时并不会在原地进行修改，而是使用 Copy On Write 的方式来优化性能，这些实现细节都会影响最终提供的保证。总结来说，对于不直接使用分区而是使用文件的数据库来说，文件系统是一个极大的变数。例如在<a href="https://www.phoronix.com/news/Linux-5.14-File-Systems">www.phoronix.com</a>中，评测了不同文件系统对数据库性能的影响。</p>
 
+<div style="page-break-after: always;"></div>
 </div>
+</div>
+<div id="ssd-characteristics-and-random-io" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> SSD特性与随机读写性能<a href="intro-to-store.html#ssd-characteristics-and-random-io" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>在之前的一定篇幅中，简单介绍了机械硬盘的基本特性，这篇文章会补充介绍 SSD 的相关特性，另外还包括一个小实验，用于验证硬盘的性能，让读者对硬盘性能有进一步感性的认识。</p>
+<p>很多人认为，由于有了 SSD ，数据库的性能相比机械硬盘就相差无几了，甚至认为，对 SSD 可以任意进行读写而不必考虑优化，诚然，SSD 相比机械硬盘的提升是指数级的，但这并不意味着 SSD 本身的特性上没有明显的问题和需要注意的地方。</p>
+<p>在开始之前，我还要补充一个关于存储的基本知识。</p>
+<p>什么是随机存储器，什么是非随机存储器呢？</p>
+<p>其实，在这块并没有很明确的定义，随着闪存的普及，硬盘也可以在某种程度上认为是一个“随机访问存储器”，但我还是要指出，SSD 所使用的 NAND Flash 和 DRAM 为代表的“随机访问存储器”有着明显的区别。</p>
+<p>我在这里明确定义：如果一个存储器，可以按照处理器的“字” (WORD) 为单位进行随机读写，那么它就是随机存储器，反之，它就不是。</p>
+<div class="figure"><span style="display:block;" id="fig:page-size-of-different-storages"></span>
+<img src="images/intro-to-store/page-size-of-different-storages.png" alt="不同存储器最小读取大小的对比" width="75%" />
+<p class="caption">
+图 5.4: 不同存储器最小读取大小的对比
+</p>
+</div>
+<p>根据上述定义，抛开 Optane 等新兴的非易失性内存不谈，<strong>我们的硬盘都是不支持随机访问的，不论是机械硬盘还是 SSD ，都不支持随机访问。用之前的文章中提到的概念来说，块设备都是不支持随机访问的。</strong>这是由它们的硬件特性决定的。</p>
+<p>关于机械硬盘为什么随机性能很差，之前已经介绍过，这里补充介绍 SSD 的特性：</p>
+<p>SSD 的底层使用的存储介质是 NAND Flash，NAND Flash 的最小读取单位是一个 Page ，而最小重编程单位更是达到了一个 Block ，这意味着，对 SSD 来说，每次最小读取一个 Page (越是新的 NAND Flash 页大小越大，10 年前 (2013) 的主流 Page Size 是 8K) ，而每次更新数据时的最小写入单位更是达到了一个 Block ，通常是 64~128 个 Page （随着闪存容量变大，这个值还会变大）。</p>
+<div class="figure"><span style="display:block;" id="fig:page-size-of-8ddk"></span>
+<img src="images/intro-to-store/page-size-of-8ddk.png" alt="2015年量产的TH58TEG8DDKTA20闪存的页大小已经高达16KB" width="75%" />
+<p class="caption">
+图 5.5: 2015年量产的TH58TEG8DDKTA20闪存的页大小已经高达16KB
+</p>
+</div>
+<div class="figure"><span style="display:block;" id="fig:organization-of-nand-flash"></span>
+<img src="images/intro-to-store/organization-of-nand-flash.png" alt="Nand Flash结构示意图，图源AnandTech" width="75%" />
+<p class="caption">
+图 5.6: Nand Flash结构示意图，图源AnandTech
+</p>
+</div>
+<p>而，如果我们要随机读取大量的小文件，造成的读写放大都是巨大的。如果 SSD 每次最小读取 64KB ，而要读取的数据大小是 4K，那么就存在 16 倍的读取放大。</p>
+<p>这里，我们可以简单写一个程序来测试硬盘的随机 4K 读取性能，可以看到，对于 OS 无法进行预读缓存的随机 4K 读取，即使是在 SSD 上也存在巨大的性能损耗。</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="intro-to-store.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb36-2"><a href="intro-to-store.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb36-3"><a href="intro-to-store.html#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="intro-to-store.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> IOBenchmark:</span>
+<span id="cb36-5"><a href="intro-to-store.html#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb36-6"><a href="intro-to-store.html#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.RANDOM_FILE_NAME <span class="op">=</span> <span class="st">&quot;random_file.pytest&quot;</span></span>
+<span id="cb36-7"><a href="intro-to-store.html#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> createRandomFile(<span class="va">self</span>, sizeInMegaByte<span class="op">=</span><span class="dv">1024</span>):</span>
+<span id="cb36-8"><a href="intro-to-store.html#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="va">self</span>.RANDOM_FILE_NAME, <span class="st">&#39;wb&#39;</span>) <span class="im">as</span> fout:</span>
+<span id="cb36-9"><a href="intro-to-store.html#cb36-9" aria-hidden="true" tabindex="-1"></a>            fout.write(</span>
+<span id="cb36-10"><a href="intro-to-store.html#cb36-10" aria-hidden="true" tabindex="-1"></a>                os.urandom(sizeInMegaByte <span class="op">*</span> <span class="dv">1024</span> <span class="op">*</span> <span class="dv">1024</span>))</span>
+<span id="cb36-11"><a href="intro-to-store.html#cb36-11" aria-hidden="true" tabindex="-1"></a>            fout.flush()</span>
+<span id="cb36-12"><a href="intro-to-store.html#cb36-12" aria-hidden="true" tabindex="-1"></a>            os.fsync(fout)</span>
+<span id="cb36-13"><a href="intro-to-store.html#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> random4KRead(<span class="va">self</span>, ioOperations <span class="op">=</span> <span class="dv">30000</span>):</span>
+<span id="cb36-14"><a href="intro-to-store.html#cb36-14" aria-hidden="true" tabindex="-1"></a>        <span class="im">import</span> time</span>
+<span id="cb36-15"><a href="intro-to-store.html#cb36-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="va">self</span>.RANDOM_FILE_NAME, <span class="st">&#39;rb&#39;</span>) <span class="im">as</span> fin:</span>
+<span id="cb36-16"><a href="intro-to-store.html#cb36-16" aria-hidden="true" tabindex="-1"></a>            t0 <span class="op">=</span> time.time()</span>
+<span id="cb36-17"><a href="intro-to-store.html#cb36-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ioOperations):</span>
+<span id="cb36-18"><a href="intro-to-store.html#cb36-18" aria-hidden="true" tabindex="-1"></a>                fin.seek(random.randint(<span class="dv">0</span>, os.stat(<span class="va">self</span>.RANDOM_FILE_NAME).st_size))</span>
+<span id="cb36-19"><a href="intro-to-store.html#cb36-19" aria-hidden="true" tabindex="-1"></a>                fin.read(<span class="dv">4096</span>)</span>
+<span id="cb36-20"><a href="intro-to-store.html#cb36-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Performed </span><span class="sc">{0}</span><span class="st"> iops 4k random read in </span><span class="sc">{1}</span><span class="st"> seconds&quot;</span>.<span class="bu">format</span>(ioOperations, time.time()<span class="op">-</span>t0))</span>
+<span id="cb36-21"><a href="intro-to-store.html#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="intro-to-store.html#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb36-23"><a href="intro-to-store.html#cb36-23" aria-hidden="true" tabindex="-1"></a>    ioBench <span class="op">=</span> IOBenchmark()</span>
+<span id="cb36-24"><a href="intro-to-store.html#cb36-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ioBench.createRandomFile()</span></span>
+<span id="cb36-25"><a href="intro-to-store.html#cb36-25" aria-hidden="true" tabindex="-1"></a>    ioBench.random4KRead()</span></code></pre></div>
+<p>仅仅是进行 30000 次随机的 io 读写，性能如何呢？这里我在 SATA 的固态硬盘上做了个简单测试</p>
+<div class="figure"><span style="display:block;" id="fig:benchmark-of-30000-random-4k-read"></span>
+<img src="images/intro-to-store/benchmark-of-30000-random-4k-read.png" alt="30000次随机4k读取测试" width="75%" />
+<p class="caption">
+图 5.7: 30000次随机4k读取测试
+</p>
+</div>
+<p>可以看到，仅仅是 30000 次的随机读，就要花费 5.6秒 的时间。折算下来的读取速度大约是 20MB/S ，这符合 SATA SSD 的典型性能表现</p>
+<p>除了介质本身存在如此大的读取放大损失外，设备本身的响应时间也十分慢。永远记住，假设 CPU 从 L1D 取数据的速度是 1 秒，那么 CPU 从 SSD 取数据的时间大约是 1 天。</p>
+
 </div>
 </div>
             </section>

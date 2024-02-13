@@ -5,6 +5,10 @@ fig:query-language
 fig:ahci-standard
 fig:chs-to-lba
 fig:page-cache-in-linux
+fig:page-size-of-different-storages
+fig:page-size-of-8ddk
+fig:organization-of-nand-flash
+fig:benchmark-of-30000-random-4k-read
 preface
 intro
 building-a-employee-management-system
@@ -62,3 +66,4 @@ partitions
 benefits-of-using-a-whole-partition-as-a-db-file
 how-linux-acclerates-file-rw
 o_direct
+ssd-characteristics-and-random-io
