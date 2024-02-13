@@ -9,6 +9,8 @@ fig:page-size-of-different-storages
 fig:page-size-of-8ddk
 fig:organization-of-nand-flash
 fig:benchmark-of-30000-random-4k-read
+fig:organization-of-fat32
+fig:links-in-fat
 preface
 intro
 building-a-employee-management-system
@@ -67,3 +69,9 @@ benefits-of-using-a-whole-partition-as-a-db-file
 how-linux-acclerates-file-rw
 o_direct
 ssd-characteristics-and-random-io
+filesystem
+introduction-to-fat32
+clusters-of-fat32
+file-allocation-table
+directorys-in-fat32
+recovery-of-fat32
