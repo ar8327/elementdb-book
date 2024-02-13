@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>ElementDB the Book</title>
+  <title>第 5 章 存储基础 | ElementDB the Book</title>
   <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="ElementDB the Book" />
+  <meta property="og:title" content="第 5 章 存储基础 | ElementDB the Book" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   <meta name="github-repo" content="ar8327/elementdb-book" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="ElementDB the Book" />
+  <meta name="twitter:title" content="第 5 章 存储基础 | ElementDB the Book" />
   
   <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="query-language.html"/>
 
-<link rel="next" href="intro.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -223,41 +223,137 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">ElementDB the Book</h1>
-<h2 class="subtitle"><em>84322d7</em></h2>
-<p class="author"><em>ar8327</em></p>
-<p class="date"><em>2024-02-13</em></p>
+<div id="intro-to-store" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">第 5 章</span> 存储基础<a href="intro-to-store.html#intro-to-store" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="harddrives-and-os" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> 硬盘与操作系统<a href="intro-to-store.html#harddrives-and-os" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>大家都知道数据是存储在硬盘上的，这篇文章会重点讨论硬盘与操作系统是如何交互的，这部分的讨论侧重于软件的讨论，硬盘还有一些值得注意的硬件特性，例如高延迟、随机读写性能差、读写放大等特性，会在另外的文章中讨论。</p>
+<div id="how-os-recongize-hdds" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> 操作系统如何认识硬盘<a href="intro-to-store.html#how-os-recongize-hdds" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>目前，硬盘已经有多种不同的物理接口，消费级硬件中主流的是 SATA 和 NGFF (M.2) 接口的硬盘，SATA 接口的硬盘几乎一定默认使用 AHCI 协议与操作系统进行交互，而 NGFF 接口的硬盘可能会存在支持 AHCI 和 NVMe 两种不同协议的硬盘，彼此之间不互相兼容。</p>
+<p>本文要讨论的是操作系统与硬件交互的标准方式，也就是类似软件上接口(interface)的概念，因此本文主要讨论的是AHCI或者NVMe，而不是SATA或者NGFF。</p>
 </div>
-<div id="preface" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">第 1 章</span> 序言<a href="index.html#preface" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>构建一个数据库是一项庞大、复杂的工作，我也并不是专业有过数据库构建经验的人，所以，我想在文章的开篇就说明白，接下来这些文章的目的、受众以及我将如何展开。</p>
-<p>首先，这并不是一份专业性的数据库材料。我会尽可能将我的想法描述清楚，但我描述的内容中可能有不专业、不准确的地方，欢迎指正。这份资料本身的受众是对这些话题有兴趣但没有专业背景的业余爱好者。</p>
-<p>再次，这份资料的目的是记录我个人学习数据库相关知识时学习到的知识，以及我自己在实现数据库时自己的思考。我通过将这些知识整理成系统性资料的方式来提高我自身对知识的理解，也能帮助需要的朋友更好地学习。</p>
-<p>最后，来介绍一下这份资料的组织形式。</p>
-<p>首先聊一聊接下来这些资料的逻辑： 我会先讨论一些关于数据库系统的通用知识，例如什么是事务、什么是 SQL 、什么样的系统是一个数据库系统。在这一过程中，我会尽可能展示这些问题的复杂性，通过展示问题的复杂性，可以让读者对之后解决问题的过程产生兴趣，同时，也有利于激发新的思考。</p>
-<p>随后，我会介绍一个数据库系统大致应该有哪些组成部分，各个部分的作用，以及建立一个数据库的模型。在之后，我会详细展开每个部分的理论基础和系统设计，辅以部分实践和杂谈。</p>
-<p>我接下来写的资料会大概属于四个分类：</p>
-<ol style="list-style-type: decimal">
-<li><p>理论，这部分文章会相对严肃一些，阐述一些关于数据库系统的基础理论。例如，要阐述 B+ 树的设计、并发控制机制等，这部分内容会相对干一点，但这是后续所有工作的理论基础，保证我们系统的正确性。</p></li>
-<li><p>系统设计，这部分在理论的基础上，会讨论在工程上实际实现系统的取舍。同一种理论上的系统模型，有多种实现方式，而不同的实现方式，会产生系统实际性能表现等方面的不同，这就涉及到取舍，是需要重点讨论的。</p></li>
-<li><p>实践，这部分并不全部是要介绍我写的代码，甚至介绍代码的工作可能只占一小部分，也想设计一些小实验来测试、证实我在文章中所说的观点。我推荐读者也做一下这些实践，可能是自己写一份测试性能的代码，也可能是自己写一个 mmap 的 demo ，通过做这些事情能提高读者的编程能力，这是最基础的能力。</p></li>
-<li><p>杂谈，杂谈这一块我会发散地讨论一些和数据库系统本身无关，但可能有借鉴价值，或者属于基本素质的内容。</p></li>
-</ol>
-<p align="right">
-ar8327
-<br> 2023 年 10 月 <br/>
+<div id="abstraction-of-hdds" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> 操作系统对硬盘的抽象<a href="intro-to-store.html#abstraction-of-hdds" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>以 AHCI 协议为例，AHCI 协议是 Intel 牵头制定的，官方有详细的协议规范： <a href="https://www.intel.com/content/www/us/en/io/serial-ata/serial-ata-ahci-spec-rev1-3-1.html" class="uri">https://www.intel.com/content/www/us/en/io/serial-ata/serial-ata-ahci-spec-rev1-3-1.html</a></p>
+<p>这份规范是非常底层的，直接说明了操作系统与硬件如何交互：</p>
+<div class="figure"><span style="display:block;" id="fig:ahci-standard"></span>
+<img src="images/intro-to-store/ahci-standard.png" alt="规范中对数据FIS传输的说明" width="75%" />
+<p class="caption">
+图 5.1: 规范中对数据FIS传输的说明
 </p>
+</div>
+<p>抽象来说，AHCI 包括了一些命令，操作系统可以通过操作内存来调用这些命令，下面是我抽象的几个指令：</p>
+<table>
+<colgroup>
+<col width="24%" />
+<col width="75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Read Sector</td>
+<td>用来读取一个或者多个扇区的数据</td>
+</tr>
+<tr class="even">
+<td>Write Sector</td>
+<td>用来写入一个或者多个扇区的数据</td>
+</tr>
+<tr class="odd">
+<td>Identify Device</td>
+<td>获取设备描述信息</td>
+</tr>
+<tr class="even">
+<td>Flush Cache</td>
+<td>强制硬盘将缓存中的数据写入到盘上</td>
+</tr>
+<tr class="odd">
+<td>Standby Immediate</td>
+<td>提示硬盘从待机状态恢复到工作状态</td>
+</tr>
+<tr class="even">
+<td>Idle Immediate</td>
+<td>提示硬盘从工作状态切换到低功耗待机模式</td>
+</tr>
+<tr class="odd">
+<td>Data Set Management</td>
+<td>用来提示硬盘进行TRIM等操作（SSD和Host managed SMR盘常用）</td>
+</tr>
+<tr class="even">
+<td>Read FPDMA Queued</td>
+<td>将一个读取指令加入到硬盘本地的队列中，硬盘可以乱序执行队列中的指令来获得最佳性能</td>
+</tr>
+<tr class="odd">
+<td>Write FPDMA Queued</td>
+<td>将一个写入指令加入到硬盘本地的队列中，硬盘可以乱序执行队列中的指令来获得最佳性能</td>
+</tr>
+</tbody>
+</table>
+<p>其中的很多指令都很容易理解，例如<code>Read Sector</code>，就是读取数据的指令，<code>Idle Immediate</code> 是对硬盘电源状态进行管理的指令，我想，读者可能会对<code>Data Set Management</code> 这一指令的作用有些困惑，这里就对这个做一下展开解释。</p>
+<p>SSD 和 Host-Managed SMR 硬盘有一个特性：<strong>在写入数据前必须先擦除掉这部分的数据，而擦除需要花费不少时间</strong>。因此，操作系统可以通过这些指令在文件删除时就通知 SSD：这片区域不再使用了，<strong>SSD 就会在空闲时进行擦除操作</strong>，节省下次写入时需要的时间。这种操作可以认为是一种垃圾回收过程，不过需要注意其与内存管理中的垃圾回收有明显区别。</p>
+<p>除了对 AHCI 的底层命令进行抽象封装外，操作系统还进行了一系列额外的工作，这部分工作视操作系统的不同而不同。例如，在 Linux 系统中，所有的硬盘都被抽象为块设备：</p>
+<pre class="cobol"><code># lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0   20G  0 disk 
+├─sda1   8:1    0  476M  0 part /boot
+└─sda2   8:2    0 19.5G  0 part /</code></pre>
+<p>通过上面的命令可以看出，在这台系统上有 20G 的硬盘，这块硬盘分为 2 个分区，被 Linux 系统识别为<code>sda</code>的块设备。</p>
+<p>下一节，我们简单聊一聊 Linux 系统中的“块设备”的特性和使用方法。</p>
+</div>
+<div id="block-device" class="section level3 hasAnchor" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> 块设备(Block device)<a href="intro-to-store.html#block-device" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>为什么 Linux 系统将硬盘抽象成块设备？块设备是什么含义？</p>
+<p>块设备在 Linux 系统上是指能够按照固定大小的块进行数据存取的设备，例如，对于扇区大小是 512B 的硬盘来说，块的大小就是 512B ，在 Linux 系统上，下面所有的设备都是块设备：</p>
+<table>
+<thead>
+<tr class="header">
+<th>设备名称</th>
+<th>设备类型</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>/dev/sdX</td>
+<td>AHCI设备</td>
+</tr>
+<tr class="even">
+<td>/dev/sr0</td>
+<td>光驱</td>
+</tr>
+<tr class="odd">
+<td>/dev/hdX</td>
+<td>IDE设备</td>
+</tr>
+<tr class="even">
+<td>/dev/nvmeX</td>
+<td>NVMe设备</td>
+</tr>
+<tr class="odd">
+<td>/dev/mmcblkX</td>
+<td>MMC设备(eMMC或者SD卡)</td>
+</tr>
+</tbody>
+</table>
+<p>在 Unix 系统中，一切都是文件，因此，块设备作为文件也实现了文件的基本接口，可以被标准的文件 API 读取和写入：</p>
+<pre class="cobol"><code># sudo head -c 8 /dev/sda
+?c??м#                             </code></pre>
+<p>以上的命令使用 head 工具读取了硬盘最开始的 8 个字节的数据，当然了，展示出来的是乱码，因为这些二进制数据不是用 ASCII 编码的。</p>
 
-<div style="page-break-after: always;"></div>
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="query-language.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -288,7 +384,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/index.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/31-harddrives-and-os.Rmd",
 "text": "编辑"
 },
 "history": {

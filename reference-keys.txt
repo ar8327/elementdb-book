@@ -2,6 +2,7 @@ fig:employee-logical-view
 fig:employee-physical-view
 fig:latency-numbers
 fig:query-language
+fig:ahci-standard
 preface
 intro
 building-a-employee-management-system
@@ -48,3 +49,8 @@ top-down-parsing
 generating-a-ast
 python-demo-to-generate-an-ast
 LL-1-parser
+intro-to-store
+harddrives-and-os
+how-os-recongize-hdds
+abstraction-of-hdds
+block-device
