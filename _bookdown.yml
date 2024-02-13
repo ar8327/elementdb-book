@@ -20,3 +20,4 @@ rmd_files:
   - "31-harddrives-and-os.Rmd"
   - "32-harddrive-characteristics-and-cache.Rmd"
   - "33-ssd-characteristics-and-random-io.Rmd"
+  - "34-filesystems.Rmd"
