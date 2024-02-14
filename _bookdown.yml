@@ -22,3 +22,4 @@ rmd_files:
   - "33-ssd-characteristics-and-random-io.Rmd"
   - "34-filesystems.Rmd"
   - "41-database-storage-design.Rmd"
+  - "42-storage-layer-of-dbms.Rmd"
