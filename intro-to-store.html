@@ -23,7 +23,7 @@
 <meta name="author" content="ar8327" />
 
 
-<meta name="date" content="2024-02-13" />
+<meta name="date" content="2024-02-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="query-language.html"/>
-
+<link rel="next" href="database-storage.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -218,6 +218,14 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4.3" data-path="intro-to-store.html"><a href="intro-to-store.html#file-allocation-table"><i class="fa fa-check"></i><b>5.4.3</b> FAT</a></li>
 <li class="chapter" data-level="5.4.4" data-path="intro-to-store.html"><a href="intro-to-store.html#directorys-in-fat32"><i class="fa fa-check"></i><b>5.4.4</b> 目录管理</a></li>
 <li class="chapter" data-level="5.4.5" data-path="intro-to-store.html"><a href="intro-to-store.html#recovery-of-fat32"><i class="fa fa-check"></i><b>5.4.5</b> FAT32的灾难恢复</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="database-storage.html"><a href="database-storage.html"><i class="fa fa-check"></i><b>6</b> 数据库存储层</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="database-storage.html"><a href="database-storage.html#database-storage-design"><i class="fa fa-check"></i><b>6.1</b> 存储层的基本设计</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="database-storage.html"><a href="database-storage.html#requirements-of-storage-by-dbms"><i class="fa fa-check"></i><b>6.1.1</b> 数据库系统对数据存储的需求</a></li>
+<li class="chapter" data-level="6.1.2" data-path="database-storage.html"><a href="database-storage.html#design-principles-of-dbms-storage"><i class="fa fa-check"></i><b>6.1.2</b> 存储层设计的考虑要素</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -640,6 +648,7 @@ testfile.img
 <p>FAT1 和 FAT2 是两份完全一样的文件分配表，之所以保留 2 份，<strong>是为了当出现 FAT1 损坏的时候可以用 FAT2 进行替换</strong>。FAT2 是 FAT32 恢复机制的一部分。</p>
 <p>读者可能想到，FAT2 中的数据不一定是最新的，<strong>这也就意味着尽管文件系统可能会恢复，但是用户已经写入的文件有可能会丢失，已经删除的文件也可能又出现。</strong>为了避免这一问题，有对应的被称为 chkdsk 的工具。<strong>这一工具会对 FAT32 全盘进行扫描，而不是依赖 FAT 来进行文件的发现。</strong>当它扫描到实际存在但在 FAT 中不存在的文件时，就会将它们添加到 FAT 中，以前的操作系统里在分区的根目录通常会有 <code>LOSTFOUND.000</code> 的目录，这一目录的作用就是存储 <code>chkdsk</code> 扫描全盘发现的文件。这就是 FAT32 的崩溃恢复过程。</p>
 
+<div style="page-break-after: always;"></div>
 </div>
 </div>
 </div>
@@ -648,8 +657,8 @@ testfile.img
           </div>
         </div>
       </div>
-<a href="query-language.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="query-language.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="database-storage.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

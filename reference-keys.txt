@@ -11,6 +11,7 @@ fig:organization-of-nand-flash
 fig:benchmark-of-30000-random-4k-read
 fig:organization-of-fat32
 fig:links-in-fat
+fig:data-frag
 preface
 intro
 building-a-employee-management-system
@@ -75,3 +76,12 @@ clusters-of-fat32
 file-allocation-table
 directorys-in-fat32
 recovery-of-fat32
+database-storage
+database-storage-design
+requirements-of-storage-by-dbms
+sequencial-sync
+random-async
+design-principles-of-dbms-storage
+data-locality
+space-allocation-and-recycling
+overflow-and-variable-length-data
