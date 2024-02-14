@@ -21,3 +21,4 @@ rmd_files:
   - "32-harddrive-characteristics-and-cache.Rmd"
   - "33-ssd-characteristics-and-random-io.Rmd"
   - "34-filesystems.Rmd"
+  - "41-database-storage-design.Rmd"
