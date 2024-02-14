@@ -12,6 +12,10 @@ fig:benchmark-of-30000-random-4k-read
 fig:organization-of-fat32
 fig:links-in-fat
 fig:data-frag
+fig:paging
+fig:space-managing
+fig:fragments-in-page
+fig:page-allocation
 preface
 intro
 building-a-employee-management-system
@@ -85,3 +89,8 @@ design-principles-of-dbms-storage
 data-locality
 space-allocation-and-recycling
 overflow-and-variable-length-data
+storeage-layer-of-dbms
+addressing
+space-managing
+extent
+copy-on-write
