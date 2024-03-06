@@ -2,7 +2,7 @@
 
 # 数据库存储层 {#database-storage}
 
-## 存储层的基本设计 {#database-storage-design}
+## 存储层的基本设计要素 {#database-storage-design}
 
 在存储基础中，我已经介绍了关于硬盘的一些基础知识，这些知识应该能够帮助读者理解接下来要讨论的数据库的存储层设计。
 
