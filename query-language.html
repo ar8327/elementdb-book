@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>第 4 章 查询语言 | ElementDB the Book</title>
   <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
   <meta property="og:title" content="第 4 章 查询语言 | ElementDB the Book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ar8327" />
 
 
-<meta name="date" content="2024-02-14" />
+<meta name="date" content="2024-03-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -90,11 +90,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #c4a000; } /* Attribute */
+code span.at { color: #204a87; } /* Attribute */
 code span.bn { color: #0000cf; } /* BaseN */
 code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #000000; } /* Constant */
+code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #8f5902; font-style: italic; } /* Comment */
 code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
 code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
@@ -103,14 +103,14 @@ code span.dv { color: #0000cf; } /* DecVal */
 code span.er { color: #a40000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #000000; } /* Function */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
 code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
 code span.ot { color: #8f5902; } /* Other */
 code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #000000; } /* SpecialChar */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
 code span.ss { color: #4e9a06; } /* SpecialString */
 code span.st { color: #4e9a06; } /* String */
 code span.va { color: #000000; } /* Variable */
@@ -222,12 +222,12 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="database-storage.html"><a href="database-storage.html"><i class="fa fa-check"></i><b>6</b> 数据库存储层</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="database-storage.html"><a href="database-storage.html#database-storage-design"><i class="fa fa-check"></i><b>6.1</b> 存储层的基本设计</a>
+<li class="chapter" data-level="6.1" data-path="database-storage.html"><a href="database-storage.html#database-storage-design"><i class="fa fa-check"></i><b>6.1</b> 存储层的基本设计要素</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="database-storage.html"><a href="database-storage.html#requirements-of-storage-by-dbms"><i class="fa fa-check"></i><b>6.1.1</b> 数据库系统对数据存储的需求</a></li>
 <li class="chapter" data-level="6.1.2" data-path="database-storage.html"><a href="database-storage.html#design-principles-of-dbms-storage"><i class="fa fa-check"></i><b>6.1.2</b> 存储层设计的考虑要素</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="database-storage.html"><a href="database-storage.html#storeage-layer-of-dbms"><i class="fa fa-check"></i><b>6.2</b> 存储层的基本设计</a>
+<li class="chapter" data-level="6.2" data-path="database-storage.html"><a href="database-storage.html#storeage-layer-of-dbms"><i class="fa fa-check"></i><b>6.2</b> 一个简单的存储层设计</a>
 <ul>
 <li class="chapter" data-level="6.2.1" data-path="database-storage.html"><a href="database-storage.html#addressing"><i class="fa fa-check"></i><b>6.2.1</b> 寻址与分页</a></li>
 <li class="chapter" data-level="6.2.2" data-path="database-storage.html"><a href="database-storage.html#space-managing"><i class="fa fa-check"></i><b>6.2.2</b> 页内空间管理</a></li>
@@ -468,23 +468,23 @@ SELECT * FROM Employees INNER JOIN Departments ON Employees.DepartmentID = Depar
 <div id="top-down-parser" class="section level3 hasAnchor" number="4.3.1">
 <h3><span class="header-section-number">4.3.1</span> 自顶向下的语法解析器<a href="query-language.html#top-down-parser" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>让我们回忆之前提到过的可以描述 SELECT 语句的 BNF范式 ：</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="query-language.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">select</span><span class="op">-</span>statement<span class="op">&gt;</span> :<span class="op">:=</span> <span class="kw">SELECT</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> <span class="kw">WHERE</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span> <span class="op">&lt;</span>OP<span class="op">&gt;</span> <span class="op">&lt;</span>CONST<span class="op">&gt;</span>;</span>
-<span id="cb22-2"><a href="query-language.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span> | <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span>, <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span></span>
-<span id="cb22-3"><a href="query-language.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span></span>
-<span id="cb22-4"><a href="query-language.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span></span>
-<span id="cb22-5"><a href="query-language.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>MARK<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>letter<span class="op">&gt;</span> {<span class="op">&lt;</span>letter<span class="op">-</span><span class="kw">or</span><span class="op">-</span>digit<span class="op">&gt;</span>}</span>
-<span id="cb22-6"><a href="query-language.html#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>CONST<span class="op">&gt;</span> :<span class="op">:=</span> <span class="st">&#39;&lt;MARK&gt;&#39;</span></span>
-<span id="cb22-7"><a href="query-language.html#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>OP<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span> | <span class="op">=</span> | <span class="op">&gt;</span> | <span class="op">&lt;=</span> | <span class="op">&gt;=</span> | <span class="op">!=</span></span>
-<span id="cb22-8"><a href="query-language.html#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>letter<span class="op">&gt;</span> :<span class="op">:=</span> a | b | c | <span class="op">..</span>. | z | A | B | C | <span class="op">..</span>. | Z</span>
-<span id="cb22-9"><a href="query-language.html#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>letter<span class="op">-</span><span class="kw">or</span><span class="op">-</span>digit<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>letter<span class="op">&gt;</span> | <span class="op">&lt;</span>digit<span class="op">&gt;</span></span>
-<span id="cb22-10"><a href="query-language.html#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>digit<span class="op">&gt;</span> :<span class="op">:=</span> <span class="dv">0</span> | <span class="dv">1</span> | <span class="dv">2</span> | <span class="op">..</span>. | <span class="dv">9</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="query-language.html#cb22-1" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">select</span><span class="op">-</span>statement<span class="op">&gt;</span> :<span class="op">:=</span> <span class="kw">SELECT</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> <span class="kw">WHERE</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span> <span class="op">&lt;</span>OP<span class="op">&gt;</span> <span class="op">&lt;</span>CONST<span class="op">&gt;</span>;</span>
+<span id="cb22-2"><a href="query-language.html#cb22-2" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span> | <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span>, <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span></span>
+<span id="cb22-3"><a href="query-language.html#cb22-3" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span>name<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span></span>
+<span id="cb22-4"><a href="query-language.html#cb22-4" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span></span>
+<span id="cb22-5"><a href="query-language.html#cb22-5" tabindex="-1"></a><span class="op">&lt;</span>MARK<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>letter<span class="op">&gt;</span> {<span class="op">&lt;</span>letter<span class="op">-</span><span class="kw">or</span><span class="op">-</span>digit<span class="op">&gt;</span>}</span>
+<span id="cb22-6"><a href="query-language.html#cb22-6" tabindex="-1"></a><span class="op">&lt;</span>CONST<span class="op">&gt;</span> :<span class="op">:=</span> <span class="st">&#39;&lt;MARK&gt;&#39;</span></span>
+<span id="cb22-7"><a href="query-language.html#cb22-7" tabindex="-1"></a><span class="op">&lt;</span>OP<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span> | <span class="op">=</span> | <span class="op">&gt;</span> | <span class="op">&lt;=</span> | <span class="op">&gt;=</span> | <span class="op">!=</span></span>
+<span id="cb22-8"><a href="query-language.html#cb22-8" tabindex="-1"></a><span class="op">&lt;</span>letter<span class="op">&gt;</span> :<span class="op">:=</span> a | b | c | <span class="op">..</span>. | z | A | B | C | <span class="op">..</span>. | Z</span>
+<span id="cb22-9"><a href="query-language.html#cb22-9" tabindex="-1"></a><span class="op">&lt;</span>letter<span class="op">-</span><span class="kw">or</span><span class="op">-</span>digit<span class="op">&gt;</span> :<span class="op">:=</span> <span class="op">&lt;</span>letter<span class="op">&gt;</span> | <span class="op">&lt;</span>digit<span class="op">&gt;</span></span>
+<span id="cb22-10"><a href="query-language.html#cb22-10" tabindex="-1"></a><span class="op">&lt;</span>digit<span class="op">&gt;</span> :<span class="op">:=</span> <span class="dv">0</span> | <span class="dv">1</span> | <span class="dv">2</span> | <span class="op">..</span>. | <span class="dv">9</span></span></code></pre></div>
 <p>在这篇文章中，我会一步一步介绍如何使用自顶向下的解析方式来根据 BNF范式 解析这句 SQL ：</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="query-language.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name <span class="kw">FROM</span> students <span class="kw">WHERE</span> age <span class="op">&gt;</span> <span class="st">&#39;18&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="query-language.html#cb23-1" tabindex="-1"></a><span class="kw">SELECT</span> name <span class="kw">FROM</span> students <span class="kw">WHERE</span> age <span class="op">&gt;</span> <span class="st">&#39;18&#39;</span>;</span></code></pre></div>
 </div>
 <div id="intro-to-bnf" class="section level3 hasAnchor" number="4.3.2">
 <h3><span class="header-section-number">4.3.2</span> BNF范式的基本概念<a href="query-language.html#intro-to-bnf" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>我们首先来回顾一下 BNF范式 ，以这条 BNF范式 为例：</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="query-language.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">select</span><span class="op">-</span>statement<span class="op">&gt;</span> :<span class="op">:=</span> <span class="kw">SELECT</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> <span class="kw">WHERE</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span> <span class="op">&lt;</span>OP<span class="op">&gt;</span> <span class="op">&lt;</span>CONST<span class="op">&gt;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="query-language.html#cb24-1" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">select</span><span class="op">-</span>statement<span class="op">&gt;</span> :<span class="op">:=</span> <span class="kw">SELECT</span> <span class="op">&lt;</span><span class="kw">column</span><span class="op">-</span><span class="kw">list</span><span class="op">&gt;</span> <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span><span class="op">-</span>name<span class="op">&gt;</span> <span class="kw">WHERE</span> <span class="op">&lt;</span>MARK<span class="op">&gt;</span> <span class="op">&lt;</span>OP<span class="op">&gt;</span> <span class="op">&lt;</span>CONST<span class="op">&gt;</span>;</span></code></pre></div>
 <p>在这句 BNF范式 的左侧，是一个名为 <code>&lt;select-statement&gt;</code> 的 <strong>非终止符</strong></p>
 <p>在 BNF范式 的右侧，是<code>SELECT &lt;column-list&gt; FROM &lt;table-name&gt; WHERE &lt;MARK&gt; &lt;OP&gt; &lt;CONST&gt;;</code>，这是一个 <strong>终止符</strong> 与 <strong>非终止符</strong> 混合的 <strong>展开式</strong> 。</p>
 <p>其中，<code>SELECT</code>、<code>FROM</code>、<code>WHERE</code>、<code>;</code> 是 <strong>终止符</strong> ，而 <code>&lt;column-list&gt;</code> <code>&lt;table-name&gt;</code> <code>&lt;MARK&gt;</code> <code>&lt;OP&gt;</code> <code>&lt;CONST&gt;</code> 是 <strong>非终止符</strong> 。</p>
@@ -527,146 +527,146 @@ SELECT * FROM Employees INNER JOIN Departments ON Employees.DepartmentID = Depar
 <div id="generating-a-ast" class="section level4 hasAnchor" number="4.3.3.3">
 <h4><span class="header-section-number">4.3.3.3</span> 生成AST（抽象语法树）<a href="query-language.html#generating-a-ast" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>基于上述的解析过程，你可以发现，我们从第一条 BNF范式 出发，通过递归下降的方式直到我们将所有的 token 都推导为 <strong>终止符</strong> ，而从这个推导的过程，我们可以构建一个简化的 AST ：</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb26-1"><a href="query-language.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="fu">select</span><span class="op">-</span>statement<span class="op">&gt;</span></span>
-<span id="cb26-2"><a href="query-language.html#cb26-2" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
-<span id="cb26-3"><a href="query-language.html#cb26-3" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- SELECT</span></span>
-<span id="cb26-4"><a href="query-language.html#cb26-4" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
-<span id="cb26-5"><a href="query-language.html#cb26-5" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;column-list&gt;</span></span>
-<span id="cb26-6"><a href="query-language.html#cb26-6" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span></span>
-<span id="cb26-7"><a href="query-language.html#cb26-7" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span><span class="co">-- &lt;column-name&gt;</span></span>
-<span id="cb26-8"><a href="query-language.html#cb26-8" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>         <span class="op">|</span></span>
-<span id="cb26-9"><a href="query-language.html#cb26-9" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>         <span class="op">|</span><span class="co">-- name</span></span>
-<span id="cb26-10"><a href="query-language.html#cb26-10" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
-<span id="cb26-11"><a href="query-language.html#cb26-11" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- FROM</span></span>
-<span id="cb26-12"><a href="query-language.html#cb26-12" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
-<span id="cb26-13"><a href="query-language.html#cb26-13" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;table-name&gt;</span></span>
-<span id="cb26-14"><a href="query-language.html#cb26-14" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span></span>
-<span id="cb26-15"><a href="query-language.html#cb26-15" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span><span class="co">-- students</span></span>
-<span id="cb26-16"><a href="query-language.html#cb26-16" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
-<span id="cb26-17"><a href="query-language.html#cb26-17" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- WHERE</span></span>
-<span id="cb26-18"><a href="query-language.html#cb26-18" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span></span>
-<span id="cb26-19"><a href="query-language.html#cb26-19" aria-hidden="true" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;condition&gt;</span></span>
-<span id="cb26-20"><a href="query-language.html#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span></span>
-<span id="cb26-21"><a href="query-language.html#cb26-21" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;MARK&gt;</span></span>
-<span id="cb26-22"><a href="query-language.html#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span></span>
-<span id="cb26-23"><a href="query-language.html#cb26-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span><span class="co">-- age</span></span>
-<span id="cb26-24"><a href="query-language.html#cb26-24" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span></span>
-<span id="cb26-25"><a href="query-language.html#cb26-25" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;OP&gt;</span></span>
-<span id="cb26-26"><a href="query-language.html#cb26-26" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span></span>
-<span id="cb26-27"><a href="query-language.html#cb26-27" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span><span class="co">-- &gt;</span></span>
-<span id="cb26-28"><a href="query-language.html#cb26-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span></span>
-<span id="cb26-29"><a href="query-language.html#cb26-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;CONST&gt;</span></span>
-<span id="cb26-30"><a href="query-language.html#cb26-30" aria-hidden="true" tabindex="-1"></a>             <span class="op">|</span></span>
-<span id="cb26-31"><a href="query-language.html#cb26-31" aria-hidden="true" tabindex="-1"></a>             <span class="op">|</span><span class="co">-- &#39;18&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb26-1"><a href="query-language.html#cb26-1" tabindex="-1"></a><span class="op">&lt;</span><span class="fu">select</span><span class="op">-</span><span class="va">statement</span><span class="op">&gt;</span></span>
+<span id="cb26-2"><a href="query-language.html#cb26-2" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-3"><a href="query-language.html#cb26-3" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- SELECT</span></span>
+<span id="cb26-4"><a href="query-language.html#cb26-4" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-5"><a href="query-language.html#cb26-5" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;column-list&gt;</span></span>
+<span id="cb26-6"><a href="query-language.html#cb26-6" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-7"><a href="query-language.html#cb26-7" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span><span class="co">-- &lt;column-name&gt;</span></span>
+<span id="cb26-8"><a href="query-language.html#cb26-8" tabindex="-1"></a>   <span class="op">|</span>         <span class="op">|</span></span>
+<span id="cb26-9"><a href="query-language.html#cb26-9" tabindex="-1"></a>   <span class="op">|</span>         <span class="op">|</span><span class="co">-- name</span></span>
+<span id="cb26-10"><a href="query-language.html#cb26-10" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-11"><a href="query-language.html#cb26-11" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- FROM</span></span>
+<span id="cb26-12"><a href="query-language.html#cb26-12" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-13"><a href="query-language.html#cb26-13" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;table-name&gt;</span></span>
+<span id="cb26-14"><a href="query-language.html#cb26-14" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-15"><a href="query-language.html#cb26-15" tabindex="-1"></a>   <span class="op">|</span>    <span class="op">|</span><span class="co">-- students</span></span>
+<span id="cb26-16"><a href="query-language.html#cb26-16" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-17"><a href="query-language.html#cb26-17" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- WHERE</span></span>
+<span id="cb26-18"><a href="query-language.html#cb26-18" tabindex="-1"></a>   <span class="op">|</span></span>
+<span id="cb26-19"><a href="query-language.html#cb26-19" tabindex="-1"></a>   <span class="op">|</span><span class="co">-- &lt;condition&gt;</span></span>
+<span id="cb26-20"><a href="query-language.html#cb26-20" tabindex="-1"></a>        <span class="op">|</span></span>
+<span id="cb26-21"><a href="query-language.html#cb26-21" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;MARK&gt;</span></span>
+<span id="cb26-22"><a href="query-language.html#cb26-22" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-23"><a href="query-language.html#cb26-23" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span><span class="co">-- age</span></span>
+<span id="cb26-24"><a href="query-language.html#cb26-24" tabindex="-1"></a>        <span class="op">|</span></span>
+<span id="cb26-25"><a href="query-language.html#cb26-25" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;OP&gt;</span></span>
+<span id="cb26-26"><a href="query-language.html#cb26-26" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span></span>
+<span id="cb26-27"><a href="query-language.html#cb26-27" tabindex="-1"></a>        <span class="op">|</span>    <span class="op">|</span><span class="co">-- &gt;</span></span>
+<span id="cb26-28"><a href="query-language.html#cb26-28" tabindex="-1"></a>        <span class="op">|</span></span>
+<span id="cb26-29"><a href="query-language.html#cb26-29" tabindex="-1"></a>        <span class="op">|</span><span class="co">-- &lt;CONST&gt;</span></span>
+<span id="cb26-30"><a href="query-language.html#cb26-30" tabindex="-1"></a>             <span class="op">|</span></span>
+<span id="cb26-31"><a href="query-language.html#cb26-31" tabindex="-1"></a>             <span class="op">|</span><span class="co">-- &#39;18&#39;</span></span></code></pre></div>
 <p>这样，通过自顶向下的解析方法和 BNF范式 ，我们将一个 SELECT 语句转化为了 AST ，方便之后的 <strong>语义分析</strong> 和 <strong>代码生成</strong>。</p>
 </div>
 <div id="python-demo-to-generate-an-ast" class="section level4 hasAnchor" number="4.3.3.4">
 <h4><span class="header-section-number">4.3.3.4</span> 用Python实现自顶向下解析Demo<a href="query-language.html#python-demo-to-generate-an-ast" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>上述的过程已经很容易理解，但为了进一步明确，我把解析的过程用 python 代码实现了一下。有需要的读者可以把代码和上面的解析过程进行对照：</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="query-language.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Node:</span>
-<span id="cb27-2"><a href="query-language.html#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value):</span>
-<span id="cb27-3"><a href="query-language.html#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
-<span id="cb27-4"><a href="query-language.html#cb27-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.children <span class="op">=</span> []</span>
-<span id="cb27-5"><a href="query-language.html#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="query-language.html#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> add_child(<span class="va">self</span>, child):</span>
-<span id="cb27-7"><a href="query-language.html#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.children.append(child)</span>
-<span id="cb27-8"><a href="query-language.html#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="query-language.html#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>, level<span class="op">=</span><span class="dv">0</span>):</span>
-<span id="cb27-10"><a href="query-language.html#cb27-10" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span> <span class="op">*</span> level <span class="op">+</span> <span class="bu">repr</span>(<span class="va">self</span>.value) <span class="op">+</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span></span>
-<span id="cb27-11"><a href="query-language.html#cb27-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> child <span class="kw">in</span> <span class="va">self</span>.children:</span>
-<span id="cb27-12"><a href="query-language.html#cb27-12" aria-hidden="true" tabindex="-1"></a>            ret <span class="op">+=</span> child.<span class="fu">__repr__</span>(level <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb27-13"><a href="query-language.html#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ret</span>
-<span id="cb27-14"><a href="query-language.html#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="query-language.html#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parse(tokens):</span>
-<span id="cb27-16"><a href="query-language.html#cb27-16" aria-hidden="true" tabindex="-1"></a>    current_token_index <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb27-17"><a href="query-language.html#cb27-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-18"><a href="query-language.html#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> consume(expected):</span>
-<span id="cb27-19"><a href="query-language.html#cb27-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
-<span id="cb27-20"><a href="query-language.html#cb27-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> tokens[current_token_index] <span class="op">==</span> expected:</span>
-<span id="cb27-21"><a href="query-language.html#cb27-21" aria-hidden="true" tabindex="-1"></a>            current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb27-22"><a href="query-language.html#cb27-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">True</span></span>
-<span id="cb27-23"><a href="query-language.html#cb27-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
-<span id="cb27-24"><a href="query-language.html#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-25"><a href="query-language.html#cb27-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_mark():</span>
-<span id="cb27-26"><a href="query-language.html#cb27-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
-<span id="cb27-27"><a href="query-language.html#cb27-27" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
-<span id="cb27-28"><a href="query-language.html#cb27-28" aria-hidden="true" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb27-29"><a href="query-language.html#cb27-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
-<span id="cb27-30"><a href="query-language.html#cb27-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-31"><a href="query-language.html#cb27-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_op():</span>
-<span id="cb27-32"><a href="query-language.html#cb27-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
-<span id="cb27-33"><a href="query-language.html#cb27-33" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
-<span id="cb27-34"><a href="query-language.html#cb27-34" aria-hidden="true" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb27-35"><a href="query-language.html#cb27-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
-<span id="cb27-36"><a href="query-language.html#cb27-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-37"><a href="query-language.html#cb27-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_const():</span>
-<span id="cb27-38"><a href="query-language.html#cb27-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
-<span id="cb27-39"><a href="query-language.html#cb27-39" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
-<span id="cb27-40"><a href="query-language.html#cb27-40" aria-hidden="true" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb27-41"><a href="query-language.html#cb27-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
-<span id="cb27-42"><a href="query-language.html#cb27-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-43"><a href="query-language.html#cb27-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_column_list():</span>
-<span id="cb27-44"><a href="query-language.html#cb27-44" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(<span class="st">&#39;column-list&#39;</span>)</span>
-<span id="cb27-45"><a href="query-language.html#cb27-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb27-46"><a href="query-language.html#cb27-46" aria-hidden="true" tabindex="-1"></a>            node.add_child(parse_mark())</span>
-<span id="cb27-47"><a href="query-language.html#cb27-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;,&#39;</span>):</span>
-<span id="cb27-48"><a href="query-language.html#cb27-48" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
-<span id="cb27-49"><a href="query-language.html#cb27-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
-<span id="cb27-50"><a href="query-language.html#cb27-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-51"><a href="query-language.html#cb27-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_table_name():</span>
-<span id="cb27-52"><a href="query-language.html#cb27-52" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span>  Node(<span class="st">&#39;table-name&#39;</span>)</span>
-<span id="cb27-53"><a href="query-language.html#cb27-53" aria-hidden="true" tabindex="-1"></a>        node.add_child(parse_mark())</span>
-<span id="cb27-54"><a href="query-language.html#cb27-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
-<span id="cb27-55"><a href="query-language.html#cb27-55" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-56"><a href="query-language.html#cb27-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_where():</span>
-<span id="cb27-57"><a href="query-language.html#cb27-57" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> Node(<span class="st">&#39;Where&#39;</span>)</span>
-<span id="cb27-58"><a href="query-language.html#cb27-58" aria-hidden="true" tabindex="-1"></a>        mark <span class="op">=</span> Node(<span class="st">&#39;Mark&#39;</span>)</span>
-<span id="cb27-59"><a href="query-language.html#cb27-59" aria-hidden="true" tabindex="-1"></a>        mark.add_child(parse_mark())</span>
-<span id="cb27-60"><a href="query-language.html#cb27-60" aria-hidden="true" tabindex="-1"></a>        op <span class="op">=</span> Node(<span class="st">&#39;OP&#39;</span>)</span>
-<span id="cb27-61"><a href="query-language.html#cb27-61" aria-hidden="true" tabindex="-1"></a>        op.add_child(parse_op())</span>
-<span id="cb27-62"><a href="query-language.html#cb27-62" aria-hidden="true" tabindex="-1"></a>        const <span class="op">=</span> Node(<span class="st">&#39;Const&#39;</span>)</span>
-<span id="cb27-63"><a href="query-language.html#cb27-63" aria-hidden="true" tabindex="-1"></a>        const.add_child(parse_const())</span>
-<span id="cb27-64"><a href="query-language.html#cb27-64" aria-hidden="true" tabindex="-1"></a>        node.add_child(mark)</span>
-<span id="cb27-65"><a href="query-language.html#cb27-65" aria-hidden="true" tabindex="-1"></a>        node.add_child(op)</span>
-<span id="cb27-66"><a href="query-language.html#cb27-66" aria-hidden="true" tabindex="-1"></a>        node.add_child(const)</span>
-<span id="cb27-67"><a href="query-language.html#cb27-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> node</span>
-<span id="cb27-68"><a href="query-language.html#cb27-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-69"><a href="query-language.html#cb27-69" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> parse_select_statement():</span>
-<span id="cb27-70"><a href="query-language.html#cb27-70" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 解析入口</span></span>
-<span id="cb27-71"><a href="query-language.html#cb27-71" aria-hidden="true" tabindex="-1"></a>        root <span class="op">=</span> Node(<span class="st">&#39;select-statement&#39;</span>)</span>
-<span id="cb27-72"><a href="query-language.html#cb27-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;SELECT&#39;</span>):</span>
-<span id="cb27-73"><a href="query-language.html#cb27-73" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;SELECT&#39;&quot;</span>)</span>
-<span id="cb27-74"><a href="query-language.html#cb27-74" aria-hidden="true" tabindex="-1"></a>        root.add_child(parse_column_list())</span>
-<span id="cb27-75"><a href="query-language.html#cb27-75" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;FROM&#39;</span>):</span>
-<span id="cb27-76"><a href="query-language.html#cb27-76" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;FROM&#39;&quot;</span>)</span>
-<span id="cb27-77"><a href="query-language.html#cb27-77" aria-hidden="true" tabindex="-1"></a>        root.add_child(parse_table_name())</span>
-<span id="cb27-78"><a href="query-language.html#cb27-78" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;WHERE&#39;</span>):</span>
-<span id="cb27-79"><a href="query-language.html#cb27-79" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;WHERE&#39;&quot;</span>)</span>
-<span id="cb27-80"><a href="query-language.html#cb27-80" aria-hidden="true" tabindex="-1"></a>        root.add_child(parse_where())</span>
-<span id="cb27-81"><a href="query-language.html#cb27-81" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> root</span>
-<span id="cb27-82"><a href="query-language.html#cb27-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-83"><a href="query-language.html#cb27-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> parse_select_statement()</span>
-<span id="cb27-84"><a href="query-language.html#cb27-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-85"><a href="query-language.html#cb27-85" aria-hidden="true" tabindex="-1"></a><span class="co"># 已经分好的token</span></span>
-<span id="cb27-86"><a href="query-language.html#cb27-86" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [<span class="st">&#39;SELECT&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;FROM&#39;</span>, <span class="st">&#39;students&#39;</span>, <span class="st">&#39;WHERE&#39;</span>, <span class="st">&#39;age&#39;</span>, <span class="st">&#39;&gt;&#39;</span>, <span class="st">&quot;&#39;18&#39;&quot;</span>]</span>
-<span id="cb27-87"><a href="query-language.html#cb27-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-88"><a href="query-language.html#cb27-88" aria-hidden="true" tabindex="-1"></a><span class="co"># 自顶向下解析</span></span>
-<span id="cb27-89"><a href="query-language.html#cb27-89" aria-hidden="true" tabindex="-1"></a>ast <span class="op">=</span> parse(tokens)</span>
-<span id="cb27-90"><a href="query-language.html#cb27-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-91"><a href="query-language.html#cb27-91" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ast)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="query-language.html#cb27-1" tabindex="-1"></a><span class="kw">class</span> Node:</span>
+<span id="cb27-2"><a href="query-language.html#cb27-2" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value):</span>
+<span id="cb27-3"><a href="query-language.html#cb27-3" tabindex="-1"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
+<span id="cb27-4"><a href="query-language.html#cb27-4" tabindex="-1"></a>        <span class="va">self</span>.children <span class="op">=</span> []</span>
+<span id="cb27-5"><a href="query-language.html#cb27-5" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="query-language.html#cb27-6" tabindex="-1"></a>    <span class="kw">def</span> add_child(<span class="va">self</span>, child):</span>
+<span id="cb27-7"><a href="query-language.html#cb27-7" tabindex="-1"></a>        <span class="va">self</span>.children.append(child)</span>
+<span id="cb27-8"><a href="query-language.html#cb27-8" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="query-language.html#cb27-9" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>, level<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb27-10"><a href="query-language.html#cb27-10" tabindex="-1"></a>        ret <span class="op">=</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span> <span class="op">*</span> level <span class="op">+</span> <span class="bu">repr</span>(<span class="va">self</span>.value) <span class="op">+</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span></span>
+<span id="cb27-11"><a href="query-language.html#cb27-11" tabindex="-1"></a>        <span class="cf">for</span> child <span class="kw">in</span> <span class="va">self</span>.children:</span>
+<span id="cb27-12"><a href="query-language.html#cb27-12" tabindex="-1"></a>            ret <span class="op">+=</span> child.<span class="fu">__repr__</span>(level <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb27-13"><a href="query-language.html#cb27-13" tabindex="-1"></a>        <span class="cf">return</span> ret</span>
+<span id="cb27-14"><a href="query-language.html#cb27-14" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="query-language.html#cb27-15" tabindex="-1"></a><span class="kw">def</span> parse(tokens):</span>
+<span id="cb27-16"><a href="query-language.html#cb27-16" tabindex="-1"></a>    current_token_index <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb27-17"><a href="query-language.html#cb27-17" tabindex="-1"></a>    </span>
+<span id="cb27-18"><a href="query-language.html#cb27-18" tabindex="-1"></a>    <span class="kw">def</span> consume(expected):</span>
+<span id="cb27-19"><a href="query-language.html#cb27-19" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-20"><a href="query-language.html#cb27-20" tabindex="-1"></a>        <span class="cf">if</span> tokens[current_token_index] <span class="op">==</span> expected:</span>
+<span id="cb27-21"><a href="query-language.html#cb27-21" tabindex="-1"></a>            current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-22"><a href="query-language.html#cb27-22" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb27-23"><a href="query-language.html#cb27-23" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb27-24"><a href="query-language.html#cb27-24" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="query-language.html#cb27-25" tabindex="-1"></a>    <span class="kw">def</span> parse_mark():</span>
+<span id="cb27-26"><a href="query-language.html#cb27-26" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-27"><a href="query-language.html#cb27-27" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
+<span id="cb27-28"><a href="query-language.html#cb27-28" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-29"><a href="query-language.html#cb27-29" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-30"><a href="query-language.html#cb27-30" tabindex="-1"></a>    </span>
+<span id="cb27-31"><a href="query-language.html#cb27-31" tabindex="-1"></a>    <span class="kw">def</span> parse_op():</span>
+<span id="cb27-32"><a href="query-language.html#cb27-32" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-33"><a href="query-language.html#cb27-33" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
+<span id="cb27-34"><a href="query-language.html#cb27-34" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-35"><a href="query-language.html#cb27-35" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-36"><a href="query-language.html#cb27-36" tabindex="-1"></a></span>
+<span id="cb27-37"><a href="query-language.html#cb27-37" tabindex="-1"></a>    <span class="kw">def</span> parse_const():</span>
+<span id="cb27-38"><a href="query-language.html#cb27-38" tabindex="-1"></a>        <span class="kw">nonlocal</span> current_token_index</span>
+<span id="cb27-39"><a href="query-language.html#cb27-39" tabindex="-1"></a>        node <span class="op">=</span> Node(tokens[current_token_index])</span>
+<span id="cb27-40"><a href="query-language.html#cb27-40" tabindex="-1"></a>        current_token_index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-41"><a href="query-language.html#cb27-41" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-42"><a href="query-language.html#cb27-42" tabindex="-1"></a></span>
+<span id="cb27-43"><a href="query-language.html#cb27-43" tabindex="-1"></a>    <span class="kw">def</span> parse_column_list():</span>
+<span id="cb27-44"><a href="query-language.html#cb27-44" tabindex="-1"></a>        node <span class="op">=</span> Node(<span class="st">&#39;column-list&#39;</span>)</span>
+<span id="cb27-45"><a href="query-language.html#cb27-45" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb27-46"><a href="query-language.html#cb27-46" tabindex="-1"></a>            node.add_child(parse_mark())</span>
+<span id="cb27-47"><a href="query-language.html#cb27-47" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;,&#39;</span>):</span>
+<span id="cb27-48"><a href="query-language.html#cb27-48" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb27-49"><a href="query-language.html#cb27-49" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-50"><a href="query-language.html#cb27-50" tabindex="-1"></a></span>
+<span id="cb27-51"><a href="query-language.html#cb27-51" tabindex="-1"></a>    <span class="kw">def</span> parse_table_name():</span>
+<span id="cb27-52"><a href="query-language.html#cb27-52" tabindex="-1"></a>        node <span class="op">=</span>  Node(<span class="st">&#39;table-name&#39;</span>)</span>
+<span id="cb27-53"><a href="query-language.html#cb27-53" tabindex="-1"></a>        node.add_child(parse_mark())</span>
+<span id="cb27-54"><a href="query-language.html#cb27-54" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-55"><a href="query-language.html#cb27-55" tabindex="-1"></a>    </span>
+<span id="cb27-56"><a href="query-language.html#cb27-56" tabindex="-1"></a>    <span class="kw">def</span> parse_where():</span>
+<span id="cb27-57"><a href="query-language.html#cb27-57" tabindex="-1"></a>        node <span class="op">=</span> Node(<span class="st">&#39;Where&#39;</span>)</span>
+<span id="cb27-58"><a href="query-language.html#cb27-58" tabindex="-1"></a>        mark <span class="op">=</span> Node(<span class="st">&#39;Mark&#39;</span>)</span>
+<span id="cb27-59"><a href="query-language.html#cb27-59" tabindex="-1"></a>        mark.add_child(parse_mark())</span>
+<span id="cb27-60"><a href="query-language.html#cb27-60" tabindex="-1"></a>        op <span class="op">=</span> Node(<span class="st">&#39;OP&#39;</span>)</span>
+<span id="cb27-61"><a href="query-language.html#cb27-61" tabindex="-1"></a>        op.add_child(parse_op())</span>
+<span id="cb27-62"><a href="query-language.html#cb27-62" tabindex="-1"></a>        const <span class="op">=</span> Node(<span class="st">&#39;Const&#39;</span>)</span>
+<span id="cb27-63"><a href="query-language.html#cb27-63" tabindex="-1"></a>        const.add_child(parse_const())</span>
+<span id="cb27-64"><a href="query-language.html#cb27-64" tabindex="-1"></a>        node.add_child(mark)</span>
+<span id="cb27-65"><a href="query-language.html#cb27-65" tabindex="-1"></a>        node.add_child(op)</span>
+<span id="cb27-66"><a href="query-language.html#cb27-66" tabindex="-1"></a>        node.add_child(const)</span>
+<span id="cb27-67"><a href="query-language.html#cb27-67" tabindex="-1"></a>        <span class="cf">return</span> node</span>
+<span id="cb27-68"><a href="query-language.html#cb27-68" tabindex="-1"></a></span>
+<span id="cb27-69"><a href="query-language.html#cb27-69" tabindex="-1"></a>    <span class="kw">def</span> parse_select_statement():</span>
+<span id="cb27-70"><a href="query-language.html#cb27-70" tabindex="-1"></a>        <span class="co"># 解析入口</span></span>
+<span id="cb27-71"><a href="query-language.html#cb27-71" tabindex="-1"></a>        root <span class="op">=</span> Node(<span class="st">&#39;select-statement&#39;</span>)</span>
+<span id="cb27-72"><a href="query-language.html#cb27-72" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;SELECT&#39;</span>):</span>
+<span id="cb27-73"><a href="query-language.html#cb27-73" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;SELECT&#39;&quot;</span>)</span>
+<span id="cb27-74"><a href="query-language.html#cb27-74" tabindex="-1"></a>        root.add_child(parse_column_list())</span>
+<span id="cb27-75"><a href="query-language.html#cb27-75" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;FROM&#39;</span>):</span>
+<span id="cb27-76"><a href="query-language.html#cb27-76" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;FROM&#39;&quot;</span>)</span>
+<span id="cb27-77"><a href="query-language.html#cb27-77" tabindex="-1"></a>        root.add_child(parse_table_name())</span>
+<span id="cb27-78"><a href="query-language.html#cb27-78" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> consume(<span class="st">&#39;WHERE&#39;</span>):</span>
+<span id="cb27-79"><a href="query-language.html#cb27-79" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Expected &#39;WHERE&#39;&quot;</span>)</span>
+<span id="cb27-80"><a href="query-language.html#cb27-80" tabindex="-1"></a>        root.add_child(parse_where())</span>
+<span id="cb27-81"><a href="query-language.html#cb27-81" tabindex="-1"></a>        <span class="cf">return</span> root</span>
+<span id="cb27-82"><a href="query-language.html#cb27-82" tabindex="-1"></a></span>
+<span id="cb27-83"><a href="query-language.html#cb27-83" tabindex="-1"></a>    <span class="cf">return</span> parse_select_statement()</span>
+<span id="cb27-84"><a href="query-language.html#cb27-84" tabindex="-1"></a></span>
+<span id="cb27-85"><a href="query-language.html#cb27-85" tabindex="-1"></a><span class="co"># 已经分好的token</span></span>
+<span id="cb27-86"><a href="query-language.html#cb27-86" tabindex="-1"></a>tokens <span class="op">=</span> [<span class="st">&#39;SELECT&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;FROM&#39;</span>, <span class="st">&#39;students&#39;</span>, <span class="st">&#39;WHERE&#39;</span>, <span class="st">&#39;age&#39;</span>, <span class="st">&#39;&gt;&#39;</span>, <span class="st">&quot;&#39;18&#39;&quot;</span>]</span>
+<span id="cb27-87"><a href="query-language.html#cb27-87" tabindex="-1"></a></span>
+<span id="cb27-88"><a href="query-language.html#cb27-88" tabindex="-1"></a><span class="co"># 自顶向下解析</span></span>
+<span id="cb27-89"><a href="query-language.html#cb27-89" tabindex="-1"></a>ast <span class="op">=</span> parse(tokens)</span>
+<span id="cb27-90"><a href="query-language.html#cb27-90" tabindex="-1"></a></span>
+<span id="cb27-91"><a href="query-language.html#cb27-91" tabindex="-1"></a><span class="bu">print</span>(ast)</span></code></pre></div>
 <p>上面的 python 代码完全复现了之前描述的自顶向下解析过程，根据 <strong>词法分析</strong> 的结果解析出了一颗 <strong>抽象语法树</strong> ，下面是运行的结果：</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="query-language.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;select-statement&#39;</span></span>
-<span id="cb28-2"><a href="query-language.html#cb28-2" aria-hidden="true" tabindex="-1"></a>        <span class="co">&#39;column-list&#39;</span></span>
-<span id="cb28-3"><a href="query-language.html#cb28-3" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;name&#39;</span></span>
-<span id="cb28-4"><a href="query-language.html#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">&#39;table-name&#39;</span></span>
-<span id="cb28-5"><a href="query-language.html#cb28-5" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;students&#39;</span></span>
-<span id="cb28-6"><a href="query-language.html#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">&#39;Where&#39;</span></span>
-<span id="cb28-7"><a href="query-language.html#cb28-7" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;Mark&#39;</span></span>
-<span id="cb28-8"><a href="query-language.html#cb28-8" aria-hidden="true" tabindex="-1"></a>                        <span class="co">&#39;age&#39;</span></span>
-<span id="cb28-9"><a href="query-language.html#cb28-9" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;OP&#39;</span></span>
-<span id="cb28-10"><a href="query-language.html#cb28-10" aria-hidden="true" tabindex="-1"></a>                        <span class="co">&#39;&gt;&#39;</span></span>
-<span id="cb28-11"><a href="query-language.html#cb28-11" aria-hidden="true" tabindex="-1"></a>                <span class="co">&#39;Const&#39;</span></span>
-<span id="cb28-12"><a href="query-language.html#cb28-12" aria-hidden="true" tabindex="-1"></a>                        <span class="co">&quot;&#39;18&#39;&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="query-language.html#cb28-1" tabindex="-1"></a><span class="co">&#39;select-statement&#39;</span></span>
+<span id="cb28-2"><a href="query-language.html#cb28-2" tabindex="-1"></a>        <span class="co">&#39;column-list&#39;</span></span>
+<span id="cb28-3"><a href="query-language.html#cb28-3" tabindex="-1"></a>                <span class="co">&#39;name&#39;</span></span>
+<span id="cb28-4"><a href="query-language.html#cb28-4" tabindex="-1"></a>        <span class="co">&#39;table-name&#39;</span></span>
+<span id="cb28-5"><a href="query-language.html#cb28-5" tabindex="-1"></a>                <span class="co">&#39;students&#39;</span></span>
+<span id="cb28-6"><a href="query-language.html#cb28-6" tabindex="-1"></a>        <span class="co">&#39;Where&#39;</span></span>
+<span id="cb28-7"><a href="query-language.html#cb28-7" tabindex="-1"></a>                <span class="co">&#39;Mark&#39;</span></span>
+<span id="cb28-8"><a href="query-language.html#cb28-8" tabindex="-1"></a>                        <span class="co">&#39;age&#39;</span></span>
+<span id="cb28-9"><a href="query-language.html#cb28-9" tabindex="-1"></a>                <span class="co">&#39;OP&#39;</span></span>
+<span id="cb28-10"><a href="query-language.html#cb28-10" tabindex="-1"></a>                        <span class="co">&#39;&gt;&#39;</span></span>
+<span id="cb28-11"><a href="query-language.html#cb28-11" tabindex="-1"></a>                <span class="co">&#39;Const&#39;</span></span>
+<span id="cb28-12"><a href="query-language.html#cb28-12" tabindex="-1"></a>                        <span class="co">&quot;&#39;18&#39;&quot;</span></span></code></pre></div>
 </div>
 </div>
 <div id="LL-1-parser" class="section level3 hasAnchor" number="4.3.4">

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>第 5 章 存储基础 | ElementDB the Book</title>
   <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
   <meta property="og:title" content="第 5 章 存储基础 | ElementDB the Book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ar8327" />
 
 
-<meta name="date" content="2024-02-14" />
+<meta name="date" content="2024-03-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -90,11 +90,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #c4a000; } /* Attribute */
+code span.at { color: #204a87; } /* Attribute */
 code span.bn { color: #0000cf; } /* BaseN */
 code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #000000; } /* Constant */
+code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #8f5902; font-style: italic; } /* Comment */
 code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
 code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
@@ -103,14 +103,14 @@ code span.dv { color: #0000cf; } /* DecVal */
 code span.er { color: #a40000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #000000; } /* Function */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
 code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
 code span.ot { color: #8f5902; } /* Other */
 code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #000000; } /* SpecialChar */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
 code span.ss { color: #4e9a06; } /* SpecialString */
 code span.st { color: #4e9a06; } /* String */
 code span.va { color: #000000; } /* Variable */
@@ -222,12 +222,12 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="database-storage.html"><a href="database-storage.html"><i class="fa fa-check"></i><b>6</b> 数据库存储层</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="database-storage.html"><a href="database-storage.html#database-storage-design"><i class="fa fa-check"></i><b>6.1</b> 存储层的基本设计</a>
+<li class="chapter" data-level="6.1" data-path="database-storage.html"><a href="database-storage.html#database-storage-design"><i class="fa fa-check"></i><b>6.1</b> 存储层的基本设计要素</a>
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="database-storage.html"><a href="database-storage.html#requirements-of-storage-by-dbms"><i class="fa fa-check"></i><b>6.1.1</b> 数据库系统对数据存储的需求</a></li>
 <li class="chapter" data-level="6.1.2" data-path="database-storage.html"><a href="database-storage.html#design-principles-of-dbms-storage"><i class="fa fa-check"></i><b>6.1.2</b> 存储层设计的考虑要素</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="database-storage.html"><a href="database-storage.html#storeage-layer-of-dbms"><i class="fa fa-check"></i><b>6.2</b> 存储层的基本设计</a>
+<li class="chapter" data-level="6.2" data-path="database-storage.html"><a href="database-storage.html#storeage-layer-of-dbms"><i class="fa fa-check"></i><b>6.2</b> 一个简单的存储层设计</a>
 <ul>
 <li class="chapter" data-level="6.2.1" data-path="database-storage.html"><a href="database-storage.html#addressing"><i class="fa fa-check"></i><b>6.2.1</b> 寻址与分页</a></li>
 <li class="chapter" data-level="6.2.2" data-path="database-storage.html"><a href="database-storage.html#space-managing"><i class="fa fa-check"></i><b>6.2.2</b> 页内空间管理</a></li>
@@ -571,31 +571,31 @@ testfile.img
 </div>
 <p>而，如果我们要随机读取大量的小文件，造成的读写放大都是巨大的。如果 SSD 每次最小读取 64KB ，而要读取的数据大小是 4K，那么就存在 16 倍的读取放大。</p>
 <p>这里，我们可以简单写一个程序来测试硬盘的随机 4K 读取性能，可以看到，对于 OS 无法进行预读缓存的随机 4K 读取，即使是在 SSD 上也存在巨大的性能损耗。</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="intro-to-store.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb36-2"><a href="intro-to-store.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb36-3"><a href="intro-to-store.html#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="intro-to-store.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> IOBenchmark:</span>
-<span id="cb36-5"><a href="intro-to-store.html#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb36-6"><a href="intro-to-store.html#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.RANDOM_FILE_NAME <span class="op">=</span> <span class="st">&quot;random_file.pytest&quot;</span></span>
-<span id="cb36-7"><a href="intro-to-store.html#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> createRandomFile(<span class="va">self</span>, sizeInMegaByte<span class="op">=</span><span class="dv">1024</span>):</span>
-<span id="cb36-8"><a href="intro-to-store.html#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="va">self</span>.RANDOM_FILE_NAME, <span class="st">&#39;wb&#39;</span>) <span class="im">as</span> fout:</span>
-<span id="cb36-9"><a href="intro-to-store.html#cb36-9" aria-hidden="true" tabindex="-1"></a>            fout.write(</span>
-<span id="cb36-10"><a href="intro-to-store.html#cb36-10" aria-hidden="true" tabindex="-1"></a>                os.urandom(sizeInMegaByte <span class="op">*</span> <span class="dv">1024</span> <span class="op">*</span> <span class="dv">1024</span>))</span>
-<span id="cb36-11"><a href="intro-to-store.html#cb36-11" aria-hidden="true" tabindex="-1"></a>            fout.flush()</span>
-<span id="cb36-12"><a href="intro-to-store.html#cb36-12" aria-hidden="true" tabindex="-1"></a>            os.fsync(fout)</span>
-<span id="cb36-13"><a href="intro-to-store.html#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> random4KRead(<span class="va">self</span>, ioOperations <span class="op">=</span> <span class="dv">30000</span>):</span>
-<span id="cb36-14"><a href="intro-to-store.html#cb36-14" aria-hidden="true" tabindex="-1"></a>        <span class="im">import</span> time</span>
-<span id="cb36-15"><a href="intro-to-store.html#cb36-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="va">self</span>.RANDOM_FILE_NAME, <span class="st">&#39;rb&#39;</span>) <span class="im">as</span> fin:</span>
-<span id="cb36-16"><a href="intro-to-store.html#cb36-16" aria-hidden="true" tabindex="-1"></a>            t0 <span class="op">=</span> time.time()</span>
-<span id="cb36-17"><a href="intro-to-store.html#cb36-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ioOperations):</span>
-<span id="cb36-18"><a href="intro-to-store.html#cb36-18" aria-hidden="true" tabindex="-1"></a>                fin.seek(random.randint(<span class="dv">0</span>, os.stat(<span class="va">self</span>.RANDOM_FILE_NAME).st_size))</span>
-<span id="cb36-19"><a href="intro-to-store.html#cb36-19" aria-hidden="true" tabindex="-1"></a>                fin.read(<span class="dv">4096</span>)</span>
-<span id="cb36-20"><a href="intro-to-store.html#cb36-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Performed </span><span class="sc">{0}</span><span class="st"> iops 4k random read in </span><span class="sc">{1}</span><span class="st"> seconds&quot;</span>.<span class="bu">format</span>(ioOperations, time.time()<span class="op">-</span>t0))</span>
-<span id="cb36-21"><a href="intro-to-store.html#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-22"><a href="intro-to-store.html#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
-<span id="cb36-23"><a href="intro-to-store.html#cb36-23" aria-hidden="true" tabindex="-1"></a>    ioBench <span class="op">=</span> IOBenchmark()</span>
-<span id="cb36-24"><a href="intro-to-store.html#cb36-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ioBench.createRandomFile()</span></span>
-<span id="cb36-25"><a href="intro-to-store.html#cb36-25" aria-hidden="true" tabindex="-1"></a>    ioBench.random4KRead()</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="intro-to-store.html#cb36-1" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb36-2"><a href="intro-to-store.html#cb36-2" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb36-3"><a href="intro-to-store.html#cb36-3" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="intro-to-store.html#cb36-4" tabindex="-1"></a><span class="kw">class</span> IOBenchmark:</span>
+<span id="cb36-5"><a href="intro-to-store.html#cb36-5" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb36-6"><a href="intro-to-store.html#cb36-6" tabindex="-1"></a>        <span class="va">self</span>.RANDOM_FILE_NAME <span class="op">=</span> <span class="st">&quot;random_file.pytest&quot;</span></span>
+<span id="cb36-7"><a href="intro-to-store.html#cb36-7" tabindex="-1"></a>    <span class="kw">def</span> createRandomFile(<span class="va">self</span>, sizeInMegaByte<span class="op">=</span><span class="dv">1024</span>):</span>
+<span id="cb36-8"><a href="intro-to-store.html#cb36-8" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="va">self</span>.RANDOM_FILE_NAME, <span class="st">&#39;wb&#39;</span>) <span class="im">as</span> fout:</span>
+<span id="cb36-9"><a href="intro-to-store.html#cb36-9" tabindex="-1"></a>            fout.write(</span>
+<span id="cb36-10"><a href="intro-to-store.html#cb36-10" tabindex="-1"></a>                os.urandom(sizeInMegaByte <span class="op">*</span> <span class="dv">1024</span> <span class="op">*</span> <span class="dv">1024</span>))</span>
+<span id="cb36-11"><a href="intro-to-store.html#cb36-11" tabindex="-1"></a>            fout.flush()</span>
+<span id="cb36-12"><a href="intro-to-store.html#cb36-12" tabindex="-1"></a>            os.fsync(fout)</span>
+<span id="cb36-13"><a href="intro-to-store.html#cb36-13" tabindex="-1"></a>    <span class="kw">def</span> random4KRead(<span class="va">self</span>, ioOperations <span class="op">=</span> <span class="dv">30000</span>):</span>
+<span id="cb36-14"><a href="intro-to-store.html#cb36-14" tabindex="-1"></a>        <span class="im">import</span> time</span>
+<span id="cb36-15"><a href="intro-to-store.html#cb36-15" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="va">self</span>.RANDOM_FILE_NAME, <span class="st">&#39;rb&#39;</span>) <span class="im">as</span> fin:</span>
+<span id="cb36-16"><a href="intro-to-store.html#cb36-16" tabindex="-1"></a>            t0 <span class="op">=</span> time.time()</span>
+<span id="cb36-17"><a href="intro-to-store.html#cb36-17" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ioOperations):</span>
+<span id="cb36-18"><a href="intro-to-store.html#cb36-18" tabindex="-1"></a>                fin.seek(random.randint(<span class="dv">0</span>, os.stat(<span class="va">self</span>.RANDOM_FILE_NAME).st_size))</span>
+<span id="cb36-19"><a href="intro-to-store.html#cb36-19" tabindex="-1"></a>                fin.read(<span class="dv">4096</span>)</span>
+<span id="cb36-20"><a href="intro-to-store.html#cb36-20" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Performed </span><span class="sc">{0}</span><span class="st"> iops 4k random read in </span><span class="sc">{1}</span><span class="st"> seconds&quot;</span>.<span class="bu">format</span>(ioOperations, time.time()<span class="op">-</span>t0))</span>
+<span id="cb36-21"><a href="intro-to-store.html#cb36-21" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="intro-to-store.html#cb36-22" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb36-23"><a href="intro-to-store.html#cb36-23" tabindex="-1"></a>    ioBench <span class="op">=</span> IOBenchmark()</span>
+<span id="cb36-24"><a href="intro-to-store.html#cb36-24" tabindex="-1"></a>    <span class="co"># ioBench.createRandomFile()</span></span>
+<span id="cb36-25"><a href="intro-to-store.html#cb36-25" tabindex="-1"></a>    ioBench.random4KRead()</span></code></pre></div>
 <p>仅仅是进行 30000 次随机的 io 读写，性能如何呢？这里我在 SATA 的固态硬盘上做了个简单测试</p>
 <div class="figure"><span style="display:block;" id="fig:benchmark-of-30000-random-4k-read"></span>
 <img src="images/intro-to-store/benchmark-of-30000-random-4k-read.png" alt="30000次随机4k读取测试" width="75%" />
