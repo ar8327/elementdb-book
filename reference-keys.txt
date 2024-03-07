@@ -16,6 +16,7 @@ fig:paging
 fig:space-managing
 fig:fragments-in-page
 fig:page-allocation
+fig:dataelements-in-bufferpool
 preface
 intro
 building-a-employee-management-system
@@ -94,3 +95,15 @@ addressing
 space-managing
 extent
 copy-on-write
+缓存池
+预读和重复利用
+异步刷盘
+并发控制
+缓存池的设计
+正确性
+使用协议
+缓存池的淘汰策略
+fifo
+lru-least-recently-used
+lfu-least-frequently-used
+时钟算法
